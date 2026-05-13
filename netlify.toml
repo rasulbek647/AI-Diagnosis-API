@@ -1,0 +1,12 @@
+# Netlify: repo ildizidan ulang (Base directory bo‘sh qoldiring).
+# Environment → VITE_API_URL = https://<sizning-api>.onrender.com/api/v1
+
+[build]
+  base = "frontend"
+  command = "npm ci && npm run build"
+  publish = "dist"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
