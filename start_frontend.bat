@@ -1,4 +1,6 @@
 @echo off
+setlocal
+cd /d "%~dp0"
 echo Frontend jildiga o'tilmoqda...
 cd frontend
 echo Paketlar tekshirilmoqda...

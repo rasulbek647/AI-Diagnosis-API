@@ -155,6 +155,10 @@ const ru = {
 
   loading: "Загрузка...",
   error: "Произошла ошибка",
+  apiNetworkError:
+    "Нет связи с API. На Netlify укажите VITE_API_URL (URL Render + /api/v1), на Render — CORS_ORIGINS (URL Netlify). Локально проверьте, что backend на порту 8000.",
+  apiNotFound: "API не найден (неверный URL — на Netlify нужен VITE_API_URL).",
+  apiServerError: "Ошибка сервера. Попробуйте позже или смотрите логи Render.",
   success: "Успешно",
   cancel: "Отмена",
   save: "Сохранить",

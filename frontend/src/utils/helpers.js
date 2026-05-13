@@ -50,3 +50,47 @@ export function maskEmail(email) {
   const d = domMain.length ? `${domMain.slice(0, 1)}•••` : '•••';
   return `${u}@${d}.${tld}`;
 }
+
+/**
+ * FastAPI `detail`: string | { msg }[] | object
+ */
+export function formatApiDetail(detail) {
+  if (detail == null) return null;
+  if (typeof detail === 'string') return detail;
+  if (Array.isArray(detail)) {
+    const parts = detail
+      .map((x) => (typeof x === 'object' && x != null && 'msg' in x ? String(x.msg) : null))
+      .filter(Boolean);
+    return parts.length ? parts.join(' ') : null;
+  }
+  if (typeof detail === 'object' && 'message' in detail) return String(detail.message);
+  return null;
+}
+
+/**
+ * Axios xatolari uchun foydalanuvchiga tushunarli matn (t — i18n obyekti).
+ * options.fallback401 — login uchun 401 da server matni bo‘lmasa shu ishlatiladi.
+ */
+export function formatApiError(err, t, options = {}) {
+  const { fallback401 } = options;
+  const res = err.response;
+  const detail = formatApiDetail(res?.data?.detail);
+
+  if (res?.status === 401 && fallback401) {
+    return detail || fallback401;
+  }
+  if (detail) return detail;
+
+  if (!res) {
+    return t.apiNetworkError;
+  }
+
+  if (res.status === 404) {
+    return t.apiNotFound;
+  }
+  if (res.status >= 500) {
+    return t.apiServerError;
+  }
+
+  return t.error;
+}

@@ -165,6 +165,10 @@ const uz = {
   // Common
   loading: "Yuklanmoqda...",
   error: "Xatolik yuz berdi",
+  apiNetworkError:
+    "Serverga ulanib bo'lmadi. Netlifyda VITE_API_URL (Render API + /api/v1) va Renderda CORS_ORIGINS (Netlify manzili) to'g'rimi tekshiring. Mahalliy: backend 8000-portda ishlaydimi.",
+  apiNotFound: "API topilmadi (URL noto'g'ri yoki Netlifyda VITE_API_URL o'rnatilmagan bo'lishi mumkin).",
+  apiServerError: "Server xatosi. Keyinroq urinib ko'ring yoki Render loglarini tekshiring.",
   success: "Muvaffaqiyatli",
   cancel: "Bekor qilish",
   save: "Saqlash",

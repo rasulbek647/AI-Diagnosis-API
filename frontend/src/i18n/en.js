@@ -155,6 +155,10 @@ const en = {
 
   loading: "Loading...",
   error: "An error occurred",
+  apiNetworkError:
+    "Cannot reach the API. On Netlify set VITE_API_URL to your Render URL + /api/v1, and on Render set CORS_ORIGINS to your Netlify URL. Locally ensure the backend runs on port 8000.",
+  apiNotFound: "API not found (wrong URL — on Netlify you must set VITE_API_URL).",
+  apiServerError: "Server error. Try again later or check Render logs.",
   success: "Success",
   cancel: "Cancel",
   save: "Save",

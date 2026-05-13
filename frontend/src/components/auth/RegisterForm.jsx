@@ -6,6 +6,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import Button from '../ui/Button';
 import toast from 'react-hot-toast';
+import { formatApiError } from '../../utils/helpers';
 
 export default function RegisterForm() {
   const { register } = useAuth();
@@ -36,8 +37,7 @@ export default function RegisterForm() {
       toast.success(t.registerSuccess);
       navigate('/dashboard');
     } catch (err) {
-      const msg = err.response?.data?.detail || t.error;
-      toast.error(msg);
+      toast.error(formatApiError(err, t));
     } finally {
       setLoading(false);
     }

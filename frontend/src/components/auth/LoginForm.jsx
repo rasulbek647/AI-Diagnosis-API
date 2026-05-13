@@ -6,6 +6,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import Button from '../ui/Button';
 import toast from 'react-hot-toast';
+import { formatApiError } from '../../utils/helpers';
 
 export default function LoginForm() {
   const { login } = useAuth();
@@ -34,8 +35,7 @@ export default function LoginForm() {
       toast.success(t.loginSuccess);
       navigate(data?.user?.role === 'admin' ? '/admin' : '/dashboard');
     } catch (err) {
-      const msg = err.response?.data?.detail || t.invalidCredentials;
-      toast.error(msg);
+      toast.error(formatApiError(err, t, { fallback401: t.invalidCredentials }));
     } finally {
       setLoading(false);
     }
