@@ -1,12 +1,13 @@
 // HistoryPage.jsx — Diagnosis history list with detail view
 import { useEffect, useState } from 'react';
 import { History, Eye, Trash2, X, ChevronRight } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import Badge, { severityVariant } from '../components/ui/Badge';
 import Button from '../components/ui/Button';
 import api from '../api/axios';
 import toast from 'react-hot-toast';
-import { formatDate } from '../utils/helpers';
+import { formatDate, maskEmail } from '../utils/helpers';
 import { getLocalHistoryPage, deleteLocalHistory } from '../utils/localHistory';
 
 const isDemo = import.meta.env.VITE_DEMO === 'true';
@@ -81,8 +82,91 @@ function DetailModal({ item, onClose, t }) {
   );
 }
 
+function AdminUserHistoryPage() {
+  const { t, lang } = useLanguage();
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const dateLocale = lang === 'en' ? 'en-US' : lang === 'ru' ? 'ru-RU' : 'uz-UZ';
+
+  useEffect(() => {
+    const load = async () => {
+      setLoading(true);
+      try {
+        const { data } = await api.get('/admin/users');
+        setUsers(data || []);
+      } catch {
+        setUsers([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, []);
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center gap-3">
+        <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center">
+          <History size={20} className="text-emerald-400" />
+        </div>
+        <div>
+          <h2 className="font-display text-xl font-bold text-slate-100">{t.adminUserHistoryTitle}</h2>
+          <p className="text-slate-500 text-sm">{t.adminUserHistorySubtitle}</p>
+        </div>
+      </div>
+
+      <div className="glass-card overflow-hidden">
+        {loading ? (
+          <div className="py-16 text-center text-slate-500">
+            <div className="animate-spin w-8 h-8 border-2 border-primary-500 border-t-transparent rounded-full mx-auto mb-3" />
+            {t.loading}
+          </div>
+        ) : users.length === 0 ? (
+          <div className="py-16 text-center">
+            <History size={40} className="text-slate-700 mx-auto mb-3" />
+            <p className="text-slate-500">{t.adminNoUsers}</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full data-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>{t.fullName}</th>
+                  <th>{t.email}</th>
+                  <th>{t.role}</th>
+                  <th>{t.profileMemberSince}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.map((u, idx) => (
+                  <tr key={u.id}>
+                    <td className="text-slate-600 font-mono text-xs">{idx + 1}</td>
+                    <td className="font-semibold text-slate-200 text-sm">{u.full_name}</td>
+                    <td className="text-slate-500 text-sm">{maskEmail(u.email)}</td>
+                    <td>
+                      <Badge variant={u.role === 'admin' ? 'purple' : 'default'}>{u.role}</Badge>
+                    </td>
+                    <td className="font-mono text-xs text-slate-500 whitespace-nowrap">
+                      {formatDate(u.created_at, dateLocale)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function HistoryPage() {
+  const { isAdmin } = useAuth();
   const { t } = useLanguage();
+
+  if (isAdmin) return <AdminUserHistoryPage />;
   const [items,    setItems]    = useState([]);
   const [loading,  setLoading]  = useState(true);
   const [selected, setSelected] = useState(null);

@@ -2,6 +2,7 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
+import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 
 const PAGE_TITLES = {
@@ -14,9 +15,13 @@ const PAGE_TITLES = {
 
 export default function Layout() {
   const location = useLocation();
+  const { isAdmin } = useAuth();
   const { t } = useLanguage();
 
-  const titleKey = PAGE_TITLES[location.pathname] || 'appName';
+  let titleKey = PAGE_TITLES[location.pathname] || 'appName';
+  if (isAdmin && location.pathname === '/history') {
+    titleKey = 'adminUserHistoryTitle';
+  }
   const title = t[titleKey] || t.appName;
 
   return (

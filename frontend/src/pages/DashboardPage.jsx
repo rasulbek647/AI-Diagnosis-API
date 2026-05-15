@@ -11,6 +11,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
+import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { StatCard } from '../components/ui/Card';
 import Button from '../components/ui/Button';
@@ -22,6 +23,7 @@ import { readLocalHistory, computeHistoryStats } from '../utils/localHistory';
 const isDemo = import.meta.env.VITE_DEMO === 'true';
 
 export default function DashboardPage() {
+  const { isAdmin } = useAuth();
   const { t } = useLanguage();
   const navigate = useNavigate();
 
@@ -30,6 +32,25 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (isAdmin) {
+      const loadAdmin = async () => {
+        try {
+          const { data } = await api.get('/admin/stats');
+          setStats({
+            total: data.total_diagnoses ?? 0,
+            this_week: data.active_users ?? 0,
+            top_disease: data.total_users ?? 0,
+          });
+        } catch {
+          setStats({ total: 0, this_week: 0, top_disease: 0 });
+        } finally {
+          setLoading(false);
+        }
+      };
+      loadAdmin();
+      return;
+    }
+
     const load = async () => {
       try {
         if (isDemo) {
@@ -58,7 +79,7 @@ export default function DashboardPage() {
       }
     };
     load();
-  }, []);
+  }, [isAdmin]);
 
   const chartData = [
     { day: 'Du', diagnoses: 1 },
@@ -74,20 +95,20 @@ export default function DashboardPage() {
     <div className="space-y-6">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
-          label={t.totalDiagnoses}
+          label={isAdmin ? t.statCardDiagnoses : t.totalDiagnoses}
           value={loading ? '—' : stats?.total ?? 0}
           icon={Activity}
           color="blue"
         />
         <StatCard
-          label="Bu hafta"
+          label={isAdmin ? t.statCardActiveUsers : 'Bu hafta'}
           value={loading ? '—' : stats?.this_week ?? 0}
           icon={Calendar}
           color="green"
         />
         <StatCard
-          label="Eng ko'p"
-          value={loading ? '—' : stats?.top_disease || '—'}
+          label={isAdmin ? t.statCardUsers : "Eng ko'p"}
+          value={loading ? '—' : stats?.top_disease ?? '—'}
           icon={TrendingUp}
           color="amber"
         />
@@ -99,8 +120,8 @@ export default function DashboardPage() {
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 glass-card p-6">
+      <div className={isAdmin ? '' : 'grid grid-cols-1 lg:grid-cols-3 gap-6'}>
+        <div className={isAdmin ? 'glass-card p-6' : 'lg:col-span-2 glass-card p-6'}>
           <h3 className="font-display font-semibold text-slate-300 text-sm mb-6">Haftalik faoliyat</h3>
           <ResponsiveContainer width="100%" height={200}>
             <AreaChart data={chartData} margin={{ top: 8, right: 8, left: -28, bottom: 0 }}>
@@ -143,30 +164,32 @@ export default function DashboardPage() {
           </ResponsiveContainer>
         </div>
 
-        <div className="glass-card p-6 flex flex-col justify-between relative overflow-hidden min-h-[280px]">
-          <div className="absolute top-0 right-0 w-40 h-40 bg-primary-500/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl" />
-          <div>
-            <div className="w-12 h-12 rounded-xl bg-primary-600/25 border border-primary-500/35 flex items-center justify-center mb-4">
-              <HeartPulse size={22} className="text-primary-400" />
+        {!isAdmin && (
+          <div className="glass-card p-6 flex flex-col justify-between relative overflow-hidden min-h-[280px]">
+            <div className="absolute top-0 right-0 w-40 h-40 bg-primary-500/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl" />
+            <div>
+              <div className="w-12 h-12 rounded-xl bg-primary-600/25 border border-primary-500/35 flex items-center justify-center mb-4">
+                <HeartPulse size={22} className="text-primary-400" />
+              </div>
+              <h3 className="font-display font-semibold text-slate-100 text-lg mb-2">{t.quickDiagnosis}</h3>
+              <p className="text-slate-500 text-sm leading-relaxed">
+                Alomatlaringizni kiriting va AI bir necha soniyada tahlil qiladi
+              </p>
             </div>
-            <h3 className="font-display font-semibold text-slate-100 text-lg mb-2">{t.quickDiagnosis}</h3>
-            <p className="text-slate-500 text-sm leading-relaxed">
-              Alomatlaringizni kiriting va AI bir necha soniyada tahlil qiladi
-            </p>
+            <Button
+              variant="primary"
+              fullWidth
+              onClick={() => navigate('/diagnosis')}
+              className="mt-6"
+            >
+              {t.startDiagnosis}
+              <ArrowRight size={15} />
+            </Button>
           </div>
-          <Button
-            variant="primary"
-            fullWidth
-            onClick={() => navigate('/diagnosis')}
-            className="mt-6"
-          >
-            {t.startDiagnosis}
-            <ArrowRight size={15} />
-          </Button>
-        </div>
+        )}
       </div>
 
-      {recent.length > 0 && (
+      {!isAdmin && recent.length > 0 && (
         <div className="glass-card overflow-hidden">
           <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-surface-border">
             <h3 className="font-display font-semibold text-slate-100">{t.recentActivity}</h3>

@@ -37,6 +37,12 @@ function PublicRoute({ children }) {
   return children;
 }
 
+function DiagnosisRoute() {
+  const { isAdmin } = useAuth();
+  if (isAdmin) return <Navigate to="/dashboard" replace />;
+  return <DiagnosisPage />;
+}
+
 function AppRoutes() {
   const { isAdmin } = useAuth();
   return (
@@ -48,7 +54,7 @@ function AppRoutes() {
       {/* Authenticated */}
       <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
         <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/diagnosis"  element={<DiagnosisPage />} />
+        <Route path="/diagnosis"  element={<DiagnosisRoute />} />
         <Route path="/history"    element={<HistoryPage   />} />
         <Route path="/profile"    element={<ProfilePage   />} />
         <Route path="/admin"      element={

@@ -16,12 +16,17 @@ export default function Sidebar({ mobile = false, onClose }) {
     navigate('/login');
   };
 
-  const links = [
-    { to: '/dashboard', icon: LayoutDashboard, label: t.dashboard },
-    { to: '/diagnosis', icon: Stethoscope, label: t.diagnosis },
-    { to: '/history', icon: History, label: t.history },
-    ...(isAdmin ? [{ to: '/admin', icon: ShieldCheck, label: t.admin }] : []),
-  ];
+  const links = isAdmin
+    ? [
+        { to: '/dashboard', icon: LayoutDashboard, label: t.dashboard },
+        { to: '/history', icon: History, label: t.adminUserHistoryNav },
+        { to: '/admin', icon: ShieldCheck, label: t.admin },
+      ]
+    : [
+        { to: '/dashboard', icon: LayoutDashboard, label: t.dashboard },
+        { to: '/diagnosis', icon: Stethoscope, label: t.diagnosis },
+        { to: '/history', icon: History, label: t.history },
+      ];
 
   return (
     <aside className={clsx(
