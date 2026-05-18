@@ -1,10 +1,14 @@
-# Netlify: repo ildizidan ulang (Base directory bo‘sh qoldiring).
-# Environment → VITE_API_URL = https://<sizning-api>.onrender.com/api/v1
+# Netlify site: https://clever-mousse-90117c.netlify.app
+# Repo: https://github.com/rasulbek647/AI-Diagnosis-API
 
 [build]
   base = "frontend"
   command = "npm ci && npm run build"
   publish = "dist"
+
+[build.environment]
+  VITE_API_URL = "https://ai-diagnosis-api.onrender.com/api/v1"
+  VITE_DEMO = "false"
 
 [[redirects]]
   from = "/*"

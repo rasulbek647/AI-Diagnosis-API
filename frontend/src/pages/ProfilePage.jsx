@@ -1,13 +1,38 @@
 import { useEffect, useState } from 'react';
-import { ChevronDown, ChevronUp, UserCircle } from 'lucide-react';
+import { ChevronDown, ChevronUp, Eye, EyeOff, UserCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { maskEmail, formatDate } from '../utils/helpers';
 import Button from '../components/ui/Button';
 import toast from 'react-hot-toast';
 import api from '../api/axios';
+import { formatApiError } from '../utils/helpers';
 
 const isDemo = import.meta.env.VITE_DEMO === 'true';
+
+function PasswordInput({ value, onChange, autoComplete, placeholder }) {
+  const [show, setShow] = useState(false);
+  return (
+    <div className="relative">
+      <input
+        type={show ? 'text' : 'password'}
+        value={value}
+        onChange={onChange}
+        autoComplete={autoComplete}
+        placeholder={placeholder}
+        className="w-full px-3 py-2 pr-10 bg-surface border border-surface-border rounded text-slate-200"
+      />
+      <button
+        type="button"
+        onClick={() => setShow((v) => !v)}
+        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
+        aria-label={show ? 'Hide password' : 'Show password'}
+      >
+        {show ? <EyeOff size={16} /> : <Eye size={16} />}
+      </button>
+    </div>
+  );
+}
 
 export default function ProfilePage() {
   const { user, setUser } = useAuth();
@@ -45,6 +70,14 @@ export default function ProfilePage() {
       toast.error(t.profilePasswordTooShort);
       return;
     }
+    if (
+      newPassword.trim() &&
+      currentPassword.trim() &&
+      newPassword.trim() === currentPassword.trim()
+    ) {
+      toast.error(t.profileCurrentMustBeOldPassword);
+      return;
+    }
 
     const payload = { full_name: fullName.trim() };
     if (email.trim().toLowerCase() !== user.email.toLowerCase()) {
@@ -78,7 +111,7 @@ export default function ProfilePage() {
         toast.success(t.profileSaveSuccess);
       }
     } catch (err) {
-      toast.error(err?.response?.data?.detail || t.profileSaveError);
+      toast.error(formatApiError(err, t));
     } finally {
       setSaving(false);
     }
@@ -148,30 +181,28 @@ export default function ProfilePage() {
             />
             <p className="text-[11px] text-slate-500 mt-1">{t.profileEmailChangeHint}</p>
           </div>
-          <div>
-            <label className="block text-xs text-slate-500 mb-1">{t.profileNewPasswordOptional}</label>
-            <input
-              type="password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              autoComplete="new-password"
-              className="w-full px-3 py-2 bg-surface border border-surface-border rounded text-slate-200"
-              placeholder="••••••"
-            />
-          </div>
           {needsPassword && (
             <div>
-              <label className="block text-xs text-slate-500 mb-1">{t.password} ({t.profileCurrentPasswordForChange})</label>
-              <input
-                type="password"
+              <label className="block text-xs font-medium text-slate-400 mb-1">{t.profileCurrentPasswordLabel}</label>
+              <PasswordInput
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 autoComplete="current-password"
-                className="w-full px-3 py-2 bg-surface border border-surface-border rounded text-slate-200"
-                placeholder="••••••"
+                placeholder=""
               />
+              <p className="text-[11px] text-amber-400/90 mt-1.5">{t.profileCurrentPasswordHint}</p>
             </div>
           )}
+          <div>
+            <label className="block text-xs text-slate-500 mb-1">{t.profileNewPasswordOptional}</label>
+            <PasswordInput
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              autoComplete="new-password"
+              placeholder=""
+            />
+            <p className="text-[11px] text-slate-500 mt-1">{t.profileLeavePasswordEmpty}</p>
+          </div>
           <Button type="submit" disabled={saving}>
             {saving ? t.loading : t.save}
           </Button>

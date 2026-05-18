@@ -35,7 +35,7 @@ export default function RegisterForm() {
     try {
       await register(form.fullName, form.email, form.password);
       toast.success(t.registerSuccess);
-      navigate('/dashboard');
+      navigate('/diagnosis');
     } catch (err) {
       toast.error(formatApiError(err, t));
     } finally {

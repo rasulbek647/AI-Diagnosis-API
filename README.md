@@ -1,12 +1,24 @@
-# AI Diagnosis System
+# AI Diagnosis System (MedAI)
 
-Frontend Netlify uchun, backend Render uchun tayyorlangan.
+Frontend: [Netlify](https://clever-mousse-90117c.netlify.app) · Backend: [Render](https://ai-diagnosis-api.onrender.com) · Repo: [GitHub](https://github.com/rasulbek647/AI-Diagnosis-API)
+
+## Production manzillar
+
+| Xizmat | URL |
+|--------|-----|
+| Frontend | https://clever-mousse-90117c.netlify.app |
+| Backend API | https://ai-diagnosis-api.onrender.com/api/v1 |
+| Health check | https://ai-diagnosis-api.onrender.com/health |
+| Render dashboard | https://dashboard.render.com/web/srv-d826bbbtqb8s73caa5q0 |
+
+Batafsil deploy: [NETLIFY_RENDER.md](./NETLIFY_RENDER.md)
 
 ## Backend endpoints
 
 - `POST /api/v1/auth/register`
 - `POST /api/v1/auth/login`
 - `GET /api/v1/auth/me`
+- `PATCH /api/v1/auth/me`
 - `POST /api/v1/diagnosis/analyze`
 - `GET /api/v1/history`
 - `POST /api/v1/history`
@@ -18,47 +30,37 @@ Frontend Netlify uchun, backend Render uchun tayyorlangan.
 - `GET /api/v1/admin/stats`
 - `GET /api/v1/admin/diagnoses`
 
-## Render ga backend deploy
+## Render (backend)
 
-### Variant A (eng oson)
-Repo ichida `render.yaml` bor. Render Blueprint ishlatsangiz avtomatik sozlanadi.
+1. [Render dashboard](https://dashboard.render.com/web/srv-d826bbbtqb8s73caa5q0) yoki Blueprint: repo `render.yaml`.
+2. Environment:
+   - `JWT_SECRET`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`
+   - `CORS_ORIGINS=https://clever-mousse-90117c.netlify.app,http://localhost:5173,http://localhost:3000`
+3. Health: `/health`
 
-1. Render -> **New +** -> **Blueprint**
-2. GitHub repo ni tanlang
-3. `render.yaml` dagi service yaratiladi
-4. `ADMIN_EMAIL` va `ADMIN_PASSWORD` ni Render dashboardda qo'lda kiriting
-5. Deploy qiling
+## Netlify (frontend)
 
-### Variant B (qo'lda Web Service)
+- Repo: https://github.com/rasulbek647/AI-Diagnosis-API
+- Build: `netlify.toml` (`base = frontend`)
+- Env: `VITE_API_URL=https://ai-diagnosis-api.onrender.com/api/v1`, `VITE_DEMO=false`
+- Pushdan keyin **Redeploy** qiling
 
-1. Render -> **New +** -> **Web Service**
-2. Repo ni tanlang
-3. Sozlamalar:
-   - Root Directory: `backend`
-   - Build Command: `pip install -r requirements.txt`
-   - Start Command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-4. Environment variables kiriting:
-   - `APP_NAME=AI Diagnosis API`
-   - `JWT_SECRET=<juda-uzun-maxfiy-kalit>`
-   - `ACCESS_TOKEN_EXPIRE_HOURS=24`
-   - `DATABASE_URL=sqlite:///./medai.db` (demo uchun)
-   - `CORS_ORIGINS=https://<your-netlify-site>.netlify.app`
-   - `ADMIN_FULL_NAME=<ismingiz>`
-   - `ADMIN_EMAIL=<admin-email>`
-   - `ADMIN_PASSWORD=<admin-parol>`
-5. Health check: `/health`
+## Mahalliy ishga tushirish
 
-## Netlify frontend env
+```bash
+# Backend (backend/)
+pip install -r requirements.txt
+uvicorn app.main:app --reload --port 8000
 
-Netlify -> Site settings -> Environment variables:
+# Frontend (frontend/)
+npm install
+npm run dev
+```
 
-- `VITE_API_URL=https://<your-render-service>.onrender.com/api/v1`
-- `VITE_DEMO=false`
+`frontend/.env.local`: `VITE_API_URL=http://127.0.0.1:8000/api/v1`
 
-Keyin Netlify’da **Redeploy** qiling.
+## Eslatmalar
 
-## Muhim eslatma
-
-- `CORS_ORIGINS` ni productionda `*` qilmang, Netlify domeningizni yozing.
-- `JWT_SECRET` va `ADMIN_PASSWORD` kuchli bo'lsin.
-- Agar Render free plan ishlatsangiz, birinchi so'rovda backend "uyqudan uyg'onishi" mumkin.
+- Productionda `CORS_ORIGINS` ni `*` qilmang.
+- `JWT_SECRET` va `ADMIN_PASSWORD` kuchli bo‘lsin.
+- Render free planda birinchi so‘rov sekin bo‘lishi mumkin (cold start).

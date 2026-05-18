@@ -33,7 +33,7 @@ export default function LoginForm() {
     try {
       const data = await login(form.email, form.password);
       toast.success(t.loginSuccess);
-      navigate(data?.user?.role === 'admin' ? '/admin' : '/dashboard');
+      navigate(data?.user?.role === 'admin' ? '/admin' : '/diagnosis');
     } catch (err) {
       toast.error(formatApiError(err, t, { fallback401: t.invalidCredentials }));
     } finally {

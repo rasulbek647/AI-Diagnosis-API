@@ -25,7 +25,7 @@ function ProtectedRoute({ children, adminOnly = false }) {
     </div>
   );
   if (!user)              return <Navigate to="/login"     replace />;
-  if (adminOnly && !isAdmin) return <Navigate to="/dashboard" replace />;
+  if (adminOnly && !isAdmin) return <Navigate to="/diagnosis" replace />;
   return children;
 }
 
@@ -33,7 +33,7 @@ function ProtectedRoute({ children, adminOnly = false }) {
 function PublicRoute({ children }) {
   const { user, loading, isAdmin } = useAuth();
   if (loading) return null;
-  if (user) return <Navigate to={isAdmin ? '/admin' : '/dashboard'} replace />;
+  if (user) return <Navigate to={isAdmin ? '/admin' : '/diagnosis'} replace />;
   return children;
 }
 
@@ -41,6 +41,18 @@ function DiagnosisRoute() {
   const { isAdmin } = useAuth();
   if (isAdmin) return <Navigate to="/dashboard" replace />;
   return <DiagnosisPage />;
+}
+
+function DashboardRoute() {
+  const { isAdmin } = useAuth();
+  if (!isAdmin) return <Navigate to="/diagnosis" replace />;
+  return <DashboardPage />;
+}
+
+function HistoryRoute() {
+  const { isAdmin } = useAuth();
+  if (!isAdmin) return <Navigate to="/diagnosis" replace />;
+  return <HistoryPage />;
 }
 
 function AppRoutes() {
@@ -53,9 +65,9 @@ function AppRoutes() {
 
       {/* Authenticated */}
       <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
-        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/dashboard" element={<DashboardRoute />} />
         <Route path="/diagnosis"  element={<DiagnosisRoute />} />
-        <Route path="/history"    element={<HistoryPage   />} />
+        <Route path="/history"    element={<HistoryRoute />} />
         <Route path="/profile"    element={<ProfilePage   />} />
         <Route path="/admin"      element={
           <ProtectedRoute adminOnly>
@@ -64,8 +76,8 @@ function AppRoutes() {
         } />
       </Route>
 
-      <Route path="/" element={<Navigate to={isAdmin ? '/admin' : '/dashboard'} replace />} />
-      <Route path="*" element={<Navigate to={isAdmin ? '/admin' : '/dashboard'} replace />} />
+      <Route path="/" element={<Navigate to={isAdmin ? '/admin' : '/diagnosis'} replace />} />
+      <Route path="*" element={<Navigate to={isAdmin ? '/admin' : '/diagnosis'} replace />} />
     </Routes>
   );
 }

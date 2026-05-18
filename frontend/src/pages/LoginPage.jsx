@@ -11,29 +11,19 @@ export default function LoginPage() {
     <div className="min-h-screen flex">
       {/* Left — decorative panel (hidden on mobile) */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gradient-to-br from-primary-950 via-surface to-surface-card items-center justify-center p-12">
-        {/* Ambient blobs */}
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(59,130,246,0.12)_0%,transparent_70%)]" />
 
-        <div className="relative z-10 text-center max-w-md">
-          {/* Logo */}
+        <div className="relative z-10 flex flex-col items-center text-center">
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 shadow-2xl shadow-primary-600/40 mb-8">
-            <Activity size={36} className="text-white" />
+            <Activity size={36} className="text-white" strokeWidth={2.25} />
           </div>
 
-          <h1 className="font-display text-4xl font-bold text-slate-100 mb-4">
+          <h1 className="font-display text-5xl font-bold tracking-tight text-white mb-3">
             {t.appName}
           </h1>
-          <p className="text-slate-400 text-lg leading-relaxed mb-8">
+          <p className="text-lg font-light tracking-wide text-white/70">
             {t.appTagline}
           </p>
-
-          {/* Feature pills */}
-          {[t.loginFeature1, t.loginFeature2, t.loginFeature3, t.loginFeature4].map((f) => (
-            <div key={f} className="inline-flex items-center px-4 py-2 rounded-full bg-white/5 border border-white/10 text-slate-400 text-sm m-1">
-              {f}
-            </div>
-          ))}
         </div>
       </div>
 

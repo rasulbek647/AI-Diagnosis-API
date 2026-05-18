@@ -71,6 +71,12 @@ export function formatApiDetail(detail) {
  * Axios xatolari uchun foydalanuvchiga tushunarli matn (t — i18n obyekti).
  * options.fallback401 — login uchun 401 da server matni bo‘lmasa shu ishlatiladi.
  */
+const API_DETAIL_I18N = {
+  'Current password is incorrect or missing': 'profileWrongCurrentPassword',
+  'Password must be at least 6 characters': 'profilePasswordTooShort',
+  'Full name cannot be empty': 'profileNameRequired',
+};
+
 export function formatApiError(err, t, options = {}) {
   const { fallback401 } = options;
   const res = err.response;
@@ -79,7 +85,11 @@ export function formatApiError(err, t, options = {}) {
   if (res?.status === 401 && fallback401) {
     return detail || fallback401;
   }
-  if (detail) return detail;
+  if (detail) {
+    const key = API_DETAIL_I18N[detail];
+    if (key && t[key]) return t[key];
+    return detail;
+  }
 
   if (!res) {
     return t.apiNetworkError;

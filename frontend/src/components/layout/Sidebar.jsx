@@ -22,11 +22,7 @@ export default function Sidebar({ mobile = false, onClose }) {
         { to: '/history', icon: History, label: t.adminUserHistoryNav },
         { to: '/admin', icon: ShieldCheck, label: t.admin },
       ]
-    : [
-        { to: '/dashboard', icon: LayoutDashboard, label: t.dashboard },
-        { to: '/diagnosis', icon: Stethoscope, label: t.diagnosis },
-        { to: '/history', icon: History, label: t.history },
-      ];
+    : [{ to: '/diagnosis', icon: Stethoscope, label: t.diagnosis }];
 
   return (
     <aside className={clsx(
