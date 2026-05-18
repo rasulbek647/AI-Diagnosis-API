@@ -52,7 +52,12 @@ const ru = {
   profileWrongCurrentPassword: "Неверный или не указан текущий пароль",
   profilePasswordTooShort: "Пароль не короче 6 символов",
   profileNameRequired: "Укажите имя",
-  adminUsersReadOnly: "Email и имя других пользователей только для просмотра; свои данные меняйте в профиле.",
+  adminUsersEditHint: "Откройте пользователя, измените данные и нажмите Сохранить.",
+  adminUserSaveSuccess: "Пользователь сохранён",
+  adminUserSaveError: "Не удалось сохранить пользователя",
+  adminResetPasswordOptional: "Новый пароль (необязательно, задаёт админ)",
+  adminAccountActive: "Активный аккаунт",
+  adminMainAdminLocked: "Email и роль главного админа нельзя изменить",
 
   welcomeBack: "Добро пожаловать",
   totalDiagnoses: "Всего диагнозов",

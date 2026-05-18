@@ -25,6 +25,7 @@ Batafsil deploy: [NETLIFY_RENDER.md](./NETLIFY_RENDER.md)
 - `DELETE /api/v1/history/{id}`
 - `GET /api/v1/history/stats`
 - `GET /api/v1/admin/users`
+- `PATCH /api/v1/admin/users/{id}`
 - `PATCH /api/v1/admin/users/{id}/role`
 - `DELETE /api/v1/admin/users/{id}`
 - `GET /api/v1/admin/stats`

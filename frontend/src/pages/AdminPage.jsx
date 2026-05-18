@@ -8,7 +8,7 @@ import Badge from '../components/ui/Badge';
 import Button from '../components/ui/Button';
 import api from '../api/axios';
 import toast from 'react-hot-toast';
-import { formatDate, maskEmail } from '../utils/helpers';
+import { formatApiError, formatDate, maskEmail } from '../utils/helpers';
 
 const CATEGORY_KEYS = ['general', 'head', 'respiratory', 'digestive', 'musculoskeletal', 'skin', 'neurological'];
 
@@ -23,6 +23,8 @@ export default function AdminPage() {
   const [diagnoses, setDiagnoses] = useState([]);
   const [diseases, setDiseases] = useState([]);
   const [expandedUserId, setExpandedUserId] = useState(null);
+  const [userEdits, setUserEdits] = useState({});
+  const [savingUserId, setSavingUserId] = useState(null);
   const [form, setForm] = useState({
     name: '',
     description: '',
@@ -124,8 +126,82 @@ export default function AdminPage() {
     try {
       await api.delete(`/admin/users/${id}`);
       setUsers((prev) => prev.filter((x) => x.id !== id));
+      setExpandedUserId(null);
+      setUserEdits((prev) => {
+        const next = { ...prev };
+        delete next[id];
+        return next;
+      });
     } catch (err) {
-      toast.error(err?.response?.data?.detail || t.adminUserDeletedError);
+      toast.error(formatApiError(err, t) || t.adminUserDeletedError);
+    }
+  };
+
+  const toggleUserPanel = (u) => {
+    if (expandedUserId === u.id) {
+      setExpandedUserId(null);
+      return;
+    }
+    setExpandedUserId(u.id);
+    setUserEdits((prev) => ({
+      ...prev,
+      [u.id]: {
+        full_name: u.full_name,
+        email: u.email,
+        role: u.role,
+        is_active: u.is_active,
+        new_password: '',
+      },
+    }));
+  };
+
+  const patchUserEdit = (id, field, value) => {
+    setUserEdits((prev) => ({
+      ...prev,
+      [id]: { ...prev[id], [field]: value },
+    }));
+  };
+
+  const saveUser = async (id) => {
+    const edit = userEdits[id];
+    if (!edit?.full_name?.trim()) {
+      toast.error(t.profileNameRequired);
+      return;
+    }
+    if (edit.new_password?.trim() && edit.new_password.trim().length < 6) {
+      toast.error(t.profilePasswordTooShort);
+      return;
+    }
+
+    const payload = {
+      full_name: edit.full_name.trim(),
+      email: edit.email.trim().toLowerCase(),
+      role: edit.role,
+      is_active: edit.is_active,
+    };
+    if (edit.new_password?.trim()) {
+      payload.new_password = edit.new_password.trim();
+    }
+
+    setSavingUserId(id);
+    try {
+      const { data } = await api.patch(`/admin/users/${id}`, payload);
+      setUsers((prev) => prev.map((x) => (x.id === id ? data : x)));
+      setUserEdits((prev) => ({
+        ...prev,
+        [id]: {
+          full_name: data.full_name,
+          email: data.email,
+          role: data.role,
+          is_active: data.is_active,
+          new_password: '',
+        },
+      }));
+      toast.success(t.adminUserSaveSuccess);
+    } catch (err) {
+      toast.error(formatApiError(err, t) || t.adminUserSaveError);
+    } finally {
+      setSavingUserId(null);
     }
   };
 
@@ -161,14 +237,16 @@ export default function AdminPage() {
 
       {tab === 'users' && (
         <div className="glass-card p-4 space-y-2">
-          <p className="text-xs text-slate-500 mb-2">{t.adminUsersReadOnly}</p>
+          <p className="text-xs text-slate-500 mb-2">{t.adminUsersEditHint}</p>
           {users.map((u) => {
             const open = expandedUserId === u.id;
+            const edit = userEdits[u.id];
+            const isMainAdmin = u.role === 'admin';
             return (
               <div key={u.id} className="border-b border-surface-border py-2 last:border-0">
                 <button
                   type="button"
-                  onClick={() => setExpandedUserId(open ? null : u.id)}
+                  onClick={() => toggleUserPanel(u)}
                   className="w-full flex items-center justify-between gap-2 text-left py-1 rounded-lg hover:bg-white/[0.03] px-1 -mx-1 transition-colors"
                 >
                   <div className="min-w-0">
@@ -180,25 +258,74 @@ export default function AdminPage() {
                     {open ? <ChevronUp size={18} className="text-slate-500" /> : <ChevronDown size={18} className="text-slate-500" />}
                   </div>
                 </button>
-                {open && (
-                  <div className="mt-3 pl-1 space-y-2 text-sm text-slate-300">
+                {open && edit && (
+                  <div className="mt-3 pl-1 space-y-3 text-sm">
+                    <div className="text-xs text-slate-500">
+                      {t.profileMemberSince}: {formatDate(u.created_at, dateLocale)}
+                    </div>
+                    {isMainAdmin && (
+                      <p className="text-xs text-amber-400/90">{t.adminMainAdminLocked}</p>
+                    )}
                     <div>
-                      <span className="text-slate-500 text-xs">{t.email}: </span>
-                      <span className="break-all">{u.email}</span>
+                      <label className="block text-xs text-slate-500 mb-1">{t.fullName}</label>
+                      <input
+                        value={edit.full_name}
+                        onChange={(e) => patchUserEdit(u.id, 'full_name', e.target.value)}
+                        className="w-full px-3 py-2 bg-surface border border-surface-border rounded text-slate-200"
+                      />
                     </div>
                     <div>
-                      <span className="text-slate-500 text-xs">{t.fullName}: </span>
-                      {u.full_name}
+                      <label className="block text-xs text-slate-500 mb-1">{t.email}</label>
+                      <input
+                        type="email"
+                        value={edit.email}
+                        onChange={(e) => patchUserEdit(u.id, 'email', e.target.value)}
+                        disabled={isMainAdmin}
+                        className="w-full px-3 py-2 bg-surface border border-surface-border rounded text-slate-200 disabled:opacity-50"
+                      />
                     </div>
                     <div>
-                      <span className="text-slate-500 text-xs">{t.profileMemberSince}: </span>
-                      {formatDate(u.created_at, dateLocale)}
+                      <label className="block text-xs text-slate-500 mb-1">{t.role}</label>
+                      <select
+                        value={edit.role}
+                        onChange={(e) => patchUserEdit(u.id, 'role', e.target.value)}
+                        disabled={isMainAdmin}
+                        className="w-full px-3 py-2 bg-surface border border-surface-border rounded text-slate-200 disabled:opacity-50"
+                      >
+                        <option value="user">{t.profileRoleUser}</option>
+                        <option value="admin">{t.roleAdmin}</option>
+                      </select>
                     </div>
-                    <div className="pt-1">
-                      <Button size="sm" variant="danger" onClick={() => deleteUser(u.id)}>
-                        <Trash2 size={14} />
-                        {t.delete}
+                    <label className="flex items-center gap-2 text-slate-300 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={edit.is_active}
+                        onChange={(e) => patchUserEdit(u.id, 'is_active', e.target.checked)}
+                        disabled={isMainAdmin}
+                        className="rounded border-surface-border"
+                      />
+                      <span className="text-xs">{t.adminAccountActive}</span>
+                    </label>
+                    <div>
+                      <label className="block text-xs text-slate-500 mb-1">{t.adminResetPasswordOptional}</label>
+                      <input
+                        type="password"
+                        value={edit.new_password}
+                        onChange={(e) => patchUserEdit(u.id, 'new_password', e.target.value)}
+                        autoComplete="new-password"
+                        className="w-full px-3 py-2 bg-surface border border-surface-border rounded text-slate-200"
+                      />
+                    </div>
+                    <div className="flex flex-wrap gap-2 pt-1">
+                      <Button size="sm" onClick={() => saveUser(u.id)} disabled={savingUserId === u.id}>
+                        {savingUserId === u.id ? t.loading : t.save}
                       </Button>
+                      {!isMainAdmin && (
+                        <Button size="sm" variant="danger" onClick={() => deleteUser(u.id)}>
+                          <Trash2 size={14} />
+                          {t.delete}
+                        </Button>
+                      )}
                     </div>
                   </div>
                 )}

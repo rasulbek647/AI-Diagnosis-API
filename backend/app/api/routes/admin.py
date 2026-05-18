@@ -13,7 +13,8 @@ from app.models.diagnosis import DiagnosisHistory
 from app.models.disease import DiseaseKnowledge
 from app.models.user import User
 from app.schemas.disease import DiseaseCreateIn, DiseaseOut, DiseaseUpdateIn
-from app.schemas.user import UserOut, UserRoleUpdateIn
+from app.schemas.user import AdminUserUpdateIn, UserOut, UserRoleUpdateIn
+from app.services.auth_service import get_user_by_email, hash_password
 
 router = APIRouter()
 
@@ -43,6 +44,62 @@ def _normalize_category(value: str | None) -> str:
 @router.get("/users", response_model=list[UserOut])
 def users(_: User = Depends(get_admin_user), db: Session = Depends(get_db)):
     return db.query(User).order_by(User.created_at.desc()).all()
+
+
+@router.patch("/users/{user_id}", response_model=UserOut)
+def update_user(
+    user_id: int,
+    payload: AdminUserUpdateIn,
+    _: User = Depends(get_admin_user),
+    db: Session = Depends(get_db),
+):
+    target = db.get(User, user_id)
+    if not target:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    is_main_admin = bool(settings.admin_email) and target.email == settings.admin_email
+
+    if payload.full_name is not None:
+        name = payload.full_name.strip()
+        if not name:
+            raise HTTPException(status_code=400, detail="Full name cannot be empty")
+        target.full_name = name
+
+    if payload.email is not None:
+        next_email = str(payload.email).lower().strip()
+        if next_email != target.email:
+            if is_main_admin:
+                raise HTTPException(status_code=403, detail="Main admin email cannot be changed")
+            if next_email == settings.admin_email:
+                raise HTTPException(status_code=403, detail="This email is reserved for main admin")
+            if get_user_by_email(db, next_email):
+                raise HTTPException(status_code=400, detail="Email already registered")
+            target.email = next_email
+
+    if payload.role is not None:
+        role = payload.role.strip().lower()
+        if role not in {"admin", "user"}:
+            raise HTTPException(status_code=400, detail="Role must be admin or user")
+        if role == "admin" and target.email != settings.admin_email:
+            raise HTTPException(status_code=403, detail="Only configured main admin can have admin role")
+        if is_main_admin and role != "admin":
+            raise HTTPException(status_code=403, detail="Main admin role cannot be changed")
+        target.role = role
+
+    if payload.is_active is not None:
+        if is_main_admin and not payload.is_active:
+            raise HTTPException(status_code=403, detail="Main admin cannot be deactivated")
+        target.is_active = payload.is_active
+
+    if payload.new_password is not None:
+        pwd = payload.new_password.strip()
+        if len(pwd) < 6:
+            raise HTTPException(status_code=400, detail="Password must be at least 6 characters")
+        target.password_hash = hash_password(pwd)
+
+    db.commit()
+    db.refresh(target)
+    return target
 
 
 @router.patch("/users/{user_id}/role")

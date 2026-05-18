@@ -55,7 +55,12 @@ const uz = {
   profileWrongCurrentPassword: "Joriy parol noto'g'ri yoki kiritilmagan",
   profilePasswordTooShort: "Parol kamida 6 belgi",
   profileNameRequired: "Ismni kiriting",
-  adminUsersReadOnly: "Boshqa foydalanuvchilarning emaili va ismini faqat ko'rish mumkin; tahrirlash o'z profilingizda.",
+  adminUsersEditHint: "Foydalanuvchini ochib, ma'lumotlarini tahrirlang va Saqlash bosing.",
+  adminUserSaveSuccess: "Foydalanuvchi saqlandi",
+  adminUserSaveError: "Foydalanuvchini saqlab bo'lmadi",
+  adminResetPasswordOptional: "Yangi parol (ixtiyoriy, admin o'rnatadi)",
+  adminAccountActive: "Faol akkaunt",
+  adminMainAdminLocked: "Asosiy admin emaili va roli o'zgarmaydi",
 
   // Dashboard
   welcomeBack: "Xush kelibsiz",

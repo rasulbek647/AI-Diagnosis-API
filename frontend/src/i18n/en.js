@@ -52,7 +52,12 @@ const en = {
   profileWrongCurrentPassword: "Current password is incorrect or missing",
   profilePasswordTooShort: "Password must be at least 6 characters",
   profileNameRequired: "Enter your name",
-  adminUsersReadOnly: "Other users’ email and name are view-only; edit your own profile to change yours.",
+  adminUsersEditHint: "Expand a user, edit their details, then click Save.",
+  adminUserSaveSuccess: "User saved",
+  adminUserSaveError: "Could not save user",
+  adminResetPasswordOptional: "New password (optional, set by admin)",
+  adminAccountActive: "Active account",
+  adminMainAdminLocked: "Main admin email and role cannot be changed",
 
   welcomeBack: "Welcome back",
   totalDiagnoses: "Total Diagnoses",

@@ -34,6 +34,14 @@ class UserRoleUpdateIn(BaseModel):
     role: str
 
 
+class AdminUserUpdateIn(BaseModel):
+    full_name: str | None = None
+    email: EmailStr | None = None
+    role: str | None = None
+    is_active: bool | None = None
+    new_password: str | None = None
+
+
 class UserEmailUpdateIn(BaseModel):
     email: EmailStr
 

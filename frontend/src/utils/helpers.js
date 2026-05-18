@@ -75,6 +75,11 @@ const API_DETAIL_I18N = {
   'Current password is incorrect or missing': 'profileWrongCurrentPassword',
   'Password must be at least 6 characters': 'profilePasswordTooShort',
   'Full name cannot be empty': 'profileNameRequired',
+  'Main admin email cannot be changed': 'adminMainAdminLocked',
+  'Main admin role cannot be changed': 'adminMainAdminLocked',
+  'Main admin cannot be deactivated': 'adminMainAdminLocked',
+  'Only configured main admin can have admin role': 'adminMainAdminLocked',
+  'User not found': 'apiNotFound',
 };
 
 export function formatApiError(err, t, options = {}) {
