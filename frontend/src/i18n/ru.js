@@ -55,6 +55,7 @@ const ru = {
   adminUsersEditHint: "Откройте пользователя, измените данные и нажмите Сохранить.",
   adminUserSaveSuccess: "Пользователь сохранён",
   adminUserSaveError: "Не удалось сохранить пользователя",
+  adminBackendNeedsRedeploy: "Устаревший backend. Сделайте Manual Deploy на Render и повторите.",
   adminResetPasswordOptional: "Новый пароль (необязательно, задаёт админ)",
   adminAccountActive: "Активный аккаунт",
   adminMainAdminLocked: "Email и роль главного админа нельзя изменить",

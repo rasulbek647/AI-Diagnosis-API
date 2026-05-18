@@ -185,7 +185,8 @@ export default function AdminPage() {
 
     setSavingUserId(id);
     try {
-      const { data } = await api.patch(`/admin/users/${id}`, payload);
+      const res = await api.patch(`/admin/users/${id}/role`, payload);
+      const { data } = res;
       setUsers((prev) => prev.map((x) => (x.id === id ? data : x)));
       setUserEdits((prev) => ({
         ...prev,

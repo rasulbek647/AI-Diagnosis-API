@@ -58,6 +58,8 @@ const uz = {
   adminUsersEditHint: "Foydalanuvchini ochib, ma'lumotlarini tahrirlang va Saqlash bosing.",
   adminUserSaveSuccess: "Foydalanuvchi saqlandi",
   adminUserSaveError: "Foydalanuvchini saqlab bo'lmadi",
+  adminBackendNeedsRedeploy:
+    "Backend eski versiya. Render dashboardda Manual Deploy qiling, keyin qayta urinib ko'ring.",
   adminResetPasswordOptional: "Yangi parol (ixtiyoriy, admin o'rnatadi)",
   adminAccountActive: "Faol akkaunt",
   adminMainAdminLocked: "Asosiy admin emaili va roli o'zgarmaydi",

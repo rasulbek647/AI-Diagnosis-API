@@ -13,7 +13,7 @@ from app.models.diagnosis import DiagnosisHistory
 from app.models.disease import DiseaseKnowledge
 from app.models.user import User
 from app.schemas.disease import DiseaseCreateIn, DiseaseOut, DiseaseUpdateIn
-from app.schemas.user import AdminUserUpdateIn, UserOut, UserRoleUpdateIn
+from app.schemas.user import AdminUserUpdateIn, UserOut
 from app.services.auth_service import get_user_by_email, hash_password
 
 router = APIRouter()
@@ -46,17 +46,7 @@ def users(_: User = Depends(get_admin_user), db: Session = Depends(get_db)):
     return db.query(User).order_by(User.created_at.desc()).all()
 
 
-@router.patch("/users/{user_id}", response_model=UserOut)
-def update_user(
-    user_id: int,
-    payload: AdminUserUpdateIn,
-    _: User = Depends(get_admin_user),
-    db: Session = Depends(get_db),
-):
-    target = db.get(User, user_id)
-    if not target:
-        raise HTTPException(status_code=404, detail="User not found")
-
+def _apply_admin_user_update(target: User, payload: AdminUserUpdateIn, db: Session) -> User:
     is_main_admin = bool(settings.admin_email) and target.email == settings.admin_email
 
     if payload.full_name is not None:
@@ -97,30 +87,40 @@ def update_user(
             raise HTTPException(status_code=400, detail="Password must be at least 6 characters")
         target.password_hash = hash_password(pwd)
 
+    return target
+
+
+@router.patch("/users/{user_id}", response_model=UserOut)
+def update_user(
+    user_id: int,
+    payload: AdminUserUpdateIn,
+    _: User = Depends(get_admin_user),
+    db: Session = Depends(get_db),
+):
+    target = db.get(User, user_id)
+    if not target:
+        raise HTTPException(status_code=404, detail="User not found")
+    _apply_admin_user_update(target, payload, db)
     db.commit()
     db.refresh(target)
     return target
 
 
-@router.patch("/users/{user_id}/role")
-def change_role(
+@router.patch("/users/{user_id}/role", response_model=UserOut)
+def update_user_compat(
     user_id: int,
-    payload: UserRoleUpdateIn,
+    payload: AdminUserUpdateIn,
     _: User = Depends(get_admin_user),
     db: Session = Depends(get_db),
 ):
-    if payload.role not in {"admin", "user"}:
-        raise HTTPException(status_code=400, detail="Role must be admin or user")
+    """Eski deploylar uchun: to‘liq tahrirlash shu yo‘lda ham ishlaydi."""
     target = db.get(User, user_id)
     if not target:
         raise HTTPException(status_code=404, detail="User not found")
-    if payload.role == "admin" and target.email != settings.admin_email:
-        raise HTTPException(status_code=403, detail="Only configured main admin can have admin role")
-    if target.email == settings.admin_email and payload.role != "admin":
-        raise HTTPException(status_code=403, detail="Main admin role cannot be changed")
-    target.role = payload.role
+    _apply_admin_user_update(target, payload, db)
     db.commit()
-    return {"message": "updated"}
+    db.refresh(target)
+    return target
 
 
 @router.delete("/users/{user_id}")

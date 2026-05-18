@@ -80,6 +80,7 @@ const API_DETAIL_I18N = {
   'Main admin cannot be deactivated': 'adminMainAdminLocked',
   'Only configured main admin can have admin role': 'adminMainAdminLocked',
   'User not found': 'apiNotFound',
+  'Method Not Allowed': 'adminBackendNeedsRedeploy',
 };
 
 export function formatApiError(err, t, options = {}) {

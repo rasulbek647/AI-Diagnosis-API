@@ -55,6 +55,7 @@ const en = {
   adminUsersEditHint: "Expand a user, edit their details, then click Save.",
   adminUserSaveSuccess: "User saved",
   adminUserSaveError: "Could not save user",
+  adminBackendNeedsRedeploy: "Backend is outdated. Run Manual Deploy on Render, then try again.",
   adminResetPasswordOptional: "New password (optional, set by admin)",
   adminAccountActive: "Active account",
   adminMainAdminLocked: "Main admin email and role cannot be changed",
