@@ -185,19 +185,34 @@ export default function AdminPage() {
 
     setSavingUserId(id);
     try {
-      const res = await api.patch(`/admin/users/${id}/role`, payload);
-      const { data } = res;
-      setUsers((prev) => prev.map((x) => (x.id === id ? data : x)));
-      setUserEdits((prev) => ({
-        ...prev,
-        [id]: {
-          full_name: data.full_name,
-          email: data.email,
-          role: data.role,
-          is_active: data.is_active,
-          new_password: '',
-        },
-      }));
+      try {
+        await api.patch(`/admin/users/${id}`, payload);
+      } catch (err) {
+        if (err.response?.status === 405) {
+          await api.patch(`/admin/users/${id}/role`, payload);
+        } else {
+          throw err;
+        }
+      }
+
+      const { data: usersList } = await api.get('/admin/users');
+      const list = usersList || [];
+      setUsers(list);
+
+      const updated = list.find((u) => u.id === id);
+      if (updated) {
+        setUserEdits((prev) => ({
+          ...prev,
+          [id]: {
+            full_name: updated.full_name,
+            email: updated.email,
+            role: updated.role,
+            is_active: updated.is_active,
+            new_password: '',
+          },
+        }));
+      }
+
       toast.success(t.adminUserSaveSuccess);
     } catch (err) {
       toast.error(formatApiError(err, t) || t.adminUserSaveError);
