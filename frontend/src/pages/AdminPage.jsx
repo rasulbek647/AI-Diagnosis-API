@@ -6,6 +6,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { StatCard } from '../components/ui/Card';
 import Badge from '../components/ui/Badge';
 import Button from '../components/ui/Button';
+import PasswordInput from '../components/ui/PasswordInput';
 import api from '../api/axios';
 import toast from 'react-hot-toast';
 import { formatApiError, formatDate, maskEmail } from '../utils/helpers';
@@ -324,12 +325,10 @@ export default function AdminPage() {
                     </label>
                     <div>
                       <label className="block text-xs text-slate-500 mb-1">{t.adminResetPasswordOptional}</label>
-                      <input
-                        type="password"
+                      <PasswordInput
                         value={edit.new_password}
                         onChange={(e) => patchUserEdit(u.id, 'new_password', e.target.value)}
                         autoComplete="new-password"
-                        className="w-full px-3 py-2 bg-surface border border-surface-border rounded text-slate-200"
                       />
                     </div>
                     <div className="flex flex-wrap gap-2 pt-1">

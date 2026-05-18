@@ -1,38 +1,15 @@
 import { useEffect, useState } from 'react';
-import { ChevronDown, ChevronUp, Eye, EyeOff, UserCircle } from 'lucide-react';
+import { ChevronDown, ChevronUp, UserCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { maskEmail, formatDate } from '../utils/helpers';
 import Button from '../components/ui/Button';
+import PasswordInput from '../components/ui/PasswordInput';
 import toast from 'react-hot-toast';
 import api from '../api/axios';
 import { formatApiError } from '../utils/helpers';
 
 const isDemo = import.meta.env.VITE_DEMO === 'true';
-
-function PasswordInput({ value, onChange, autoComplete, placeholder }) {
-  const [show, setShow] = useState(false);
-  return (
-    <div className="relative">
-      <input
-        type={show ? 'text' : 'password'}
-        value={value}
-        onChange={onChange}
-        autoComplete={autoComplete}
-        placeholder={placeholder}
-        className="w-full px-3 py-2 pr-10 bg-surface border border-surface-border rounded text-slate-200"
-      />
-      <button
-        type="button"
-        onClick={() => setShow((v) => !v)}
-        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
-        aria-label={show ? 'Hide password' : 'Show password'}
-      >
-        {show ? <EyeOff size={16} /> : <Eye size={16} />}
-      </button>
-    </div>
-  );
-}
 
 export default function ProfilePage() {
   const { user, setUser } = useAuth();
