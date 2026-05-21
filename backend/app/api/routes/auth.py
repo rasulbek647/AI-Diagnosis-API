@@ -5,8 +5,19 @@ from app.api.deps import get_current_user
 from app.core.config import settings
 from app.core.database import get_db
 from app.models.user import User
-from app.schemas.user import AuthLoginIn, AuthRegisterIn, AuthResponse, ProfileUpdateIn, UserOut
-from app.services.auth_service import create_access_token, get_user_by_email, hash_password, verify_password
+from app.schemas.user import AuthLoginIn, AuthRegisterIn, AuthResponse, ProfileUpdateIn, RefreshTokenIn, UserOut
+from app.services.auth_service import (
+    build_auth_tokens,
+    get_user_by_email,
+    hash_password,
+    parse_token_user_id,
+    verify_password,
+)
+
+
+def _auth_response(user: User) -> AuthResponse:
+    access_token, refresh_token = build_auth_tokens(user.id, user.role)
+    return AuthResponse(access_token=access_token, refresh_token=refresh_token, user=user)
 
 router = APIRouter()
 
@@ -30,7 +41,7 @@ def register(payload: AuthRegisterIn, db: Session = Depends(get_db)):
     db.add(user)
     db.commit()
     db.refresh(user)
-    return AuthResponse(access_token=create_access_token(user.id, user.role), user=user)
+    return _auth_response(user)
 
 
 @router.post("/login", response_model=AuthResponse)
@@ -45,7 +56,19 @@ def login(payload: AuthLoginIn, db: Session = Depends(get_db)):
         user.role = "admin"
         db.commit()
         db.refresh(user)
-    return AuthResponse(access_token=create_access_token(user.id, user.role), user=user)
+    return _auth_response(user)
+
+
+@router.post("/refresh", response_model=AuthResponse)
+def refresh_tokens(payload: RefreshTokenIn, db: Session = Depends(get_db)):
+    try:
+        user_id = parse_token_user_id(payload.refresh_token, expected_type="refresh")
+    except ValueError:
+        raise HTTPException(status_code=401, detail="Invalid or expired refresh token")
+    user = db.get(User, user_id)
+    if not user or not user.is_active:
+        raise HTTPException(status_code=401, detail="User not found or inactive")
+    return _auth_response(user)
 
 
 @router.get("/me", response_model=UserOut)

@@ -14,7 +14,9 @@
 
 1. [Render dashboard](https://dashboard.render.com/web/srv-d826bbbtqb8s73caa5q0) → **Environment**.
 2. Quyidagilarni tekshiring:
-   - `JWT_SECRET` — uzun maxfiy kalit
+   - `JWT_SECRET` — uzun maxfiy kalit (o‘zgartirsangiz barcha foydalanuvchilar qayta kirishi kerak)
+   - `ACCESS_TOKEN_EXPIRE_HOURS` = `720` (30 kun — kunlik chiqib ketmaslik uchun)
+   - `REFRESH_TOKEN_EXPIRE_DAYS` = `90`
    - `ADMIN_EMAIL`, `ADMIN_PASSWORD` — admin hisobi
    - **`CORS_ORIGINS`** =  
      `https://clever-mousse-90117c.netlify.app,http://localhost:5173,http://localhost:3000`

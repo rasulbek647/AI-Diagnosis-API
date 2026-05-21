@@ -3,8 +3,8 @@ import clsx from 'clsx';
 
 export default function Button({
   children,
-  variant = 'primary',  // 'primary' | 'secondary' | 'danger' | 'ghost'
-  size = 'md',          // 'sm' | 'md' | 'lg'
+  variant = 'primary',
+  size = 'md',
   loading = false,
   disabled = false,
   fullWidth = false,
@@ -12,13 +12,17 @@ export default function Button({
   type = 'button',
   className = '',
 }) {
-  const base = 'inline-flex items-center justify-center gap-2 font-semibold rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-surface disabled:opacity-50 disabled:cursor-not-allowed';
+  const base =
+    'inline-flex items-center justify-center gap-2 font-semibold rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white disabled:opacity-50 disabled:cursor-not-allowed';
 
   const variants = {
-    primary:   'bg-primary-600 hover:bg-primary-500 active:bg-primary-700 text-white shadow-lg shadow-primary-600/20 focus:ring-primary-500',
-    secondary: 'bg-surface-card hover:bg-slate-700 border border-surface-border text-slate-300 hover:text-white focus:ring-slate-500',
-    danger:    'bg-red-600/20 hover:bg-red-600/30 border border-red-600/40 text-red-400 hover:text-red-300 focus:ring-red-500',
-    ghost:     'hover:bg-white/5 text-slate-400 hover:text-slate-100 focus:ring-slate-500',
+    primary:
+      'bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white shadow-md shadow-primary-600/25 focus:ring-primary-500',
+    secondary:
+      'bg-white hover:bg-slate-50 border border-surface-border text-slate-700 hover:text-slate-900 focus:ring-slate-300 shadow-sm',
+    danger:
+      'bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 hover:text-red-700 focus:ring-red-400',
+    ghost: 'hover:bg-slate-100 text-slate-600 hover:text-slate-900 focus:ring-slate-300',
   };
 
   const sizes = {

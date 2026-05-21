@@ -30,11 +30,11 @@ function DiseaseCard({ disease, index, t }) {
       className={clsx(
         'rounded-2xl border backdrop-blur-sm transition-all duration-200 shadow-lg',
         severity === 'high' &&
-          'border-red-400/35 bg-gradient-to-br from-red-950/40 to-slate-900/60 shadow-red-950/20',
+          'border-red-200 bg-gradient-to-br from-red-50 to-white shadow-sm',
         severity === 'medium' &&
-          'border-amber-400/30 bg-gradient-to-br from-amber-950/25 to-slate-900/60 shadow-amber-950/15',
+          'border-amber-200 bg-gradient-to-br from-amber-50 to-white shadow-sm',
         severity === 'low' &&
-          'border-emerald-500/25 bg-gradient-to-br from-emerald-950/20 to-slate-900/60 shadow-emerald-950/10',
+          'border-emerald-200 bg-gradient-to-br from-emerald-50 to-white shadow-sm',
         'animate-fade-in'
       )}
       style={{ animationDelay: `${index * 80}ms` }}
@@ -47,7 +47,7 @@ function DiseaseCard({ disease, index, t }) {
         {/* Rank */}
         <div className={clsx(
           'w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold flex-shrink-0',
-          index === 0 ? 'bg-primary-600/30 text-primary-300' : 'bg-slate-700 text-slate-400'
+          index === 0 ? 'bg-primary-100 text-primary-700' : 'bg-slate-100 text-slate-500'
         )}>
           {index + 1}
         </div>
@@ -55,7 +55,7 @@ function DiseaseCard({ disease, index, t }) {
         {/* Name + bar */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between mb-1.5">
-            <span className="font-semibold text-slate-100 truncate">{disease.name}</span>
+            <span className="font-semibold text-slate-900 truncate">{disease.name}</span>
             <div className="flex items-center gap-2 flex-shrink-0 ml-3">
               <Badge variant={severityVariant(severity)}>
                 {t[severity]}
@@ -71,7 +71,7 @@ function DiseaseCard({ disease, index, t }) {
             </div>
           </div>
 
-          <div className="w-full bg-slate-800/90 rounded-full h-2.5 overflow-hidden ring-1 ring-white/5">
+          <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
             <div
               className={clsx('prob-bar h-full rounded-full shadow-sm', BAR_COLORS[severity])}
               style={{

@@ -1,6 +1,6 @@
 // AuthContext.jsx — Authentication state management
 import { createContext, useContext, useState, useEffect } from 'react';
-import api from '../api/axios';
+import api, { clearAuthStorage, saveAuthTokens } from '../api/axios';
 
 const AuthContext = createContext(null);
 
@@ -15,39 +15,53 @@ const DEMO_USER = {
   created_at: new Date().toISOString(),
 };
 
+function persistSession(data) {
+  saveAuthTokens(data);
+}
+
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(() =>
-    isDemo ? DEMO_USER : null
-  );
+  const [user, setUser] = useState(() => (isDemo ? DEMO_USER : null));
   const [token, setToken] = useState(() =>
     isDemo ? 'demo' : localStorage.getItem('medai_token')
   );
   const [loading, setLoading] = useState(() => !isDemo);
 
-  // On mount: verify stored token (skipped in VITE_DEMO)
   useEffect(() => {
     if (isDemo) {
       setLoading(false);
       return;
     }
     const initAuth = async () => {
-      if (token) {
-        try {
-          const { data } = await api.get('/auth/me');
-          setUser(data);
-        } catch {
-          localStorage.removeItem('medai_token');
-          setToken(null);
+      if (!token) {
+        setLoading(false);
+        return;
+      }
+      try {
+        const { data } = await api.get('/auth/me');
+        setUser(data);
+      } catch {
+        const refresh = localStorage.getItem('medai_refresh_token');
+        if (refresh) {
+          try {
+            const { data } = await api.post('/auth/refresh', { refresh_token: refresh });
+            persistSession(data);
+            setToken(data.access_token);
+            setUser(data.user);
+            setLoading(false);
+            return;
+          } catch {
+            /* fall through */
+          }
         }
+        clearAuthStorage();
+        setToken(null);
+        setUser(null);
       }
       setLoading(false);
     };
     initAuth();
   }, [token]);
 
-  /**
-   * Login: POST /auth/login → { access_token, user }
-   */
   const login = async (email, password) => {
     if (isDemo) {
       localStorage.setItem('medai_token', 'demo');
@@ -56,15 +70,12 @@ export function AuthProvider({ children }) {
       return { access_token: 'demo', user: DEMO_USER };
     }
     const { data } = await api.post('/auth/login', { email, password });
-    localStorage.setItem('medai_token', data.access_token);
+    persistSession(data);
     setToken(data.access_token);
     setUser(data.user);
     return data;
   };
 
-  /**
-   * Register: POST /auth/register
-   */
   const register = async (fullName, email, password) => {
     if (isDemo) {
       const u = { ...DEMO_USER, full_name: fullName, email };
@@ -78,17 +89,14 @@ export function AuthProvider({ children }) {
       email,
       password,
     });
-    localStorage.setItem('medai_token', data.access_token);
+    persistSession(data);
     setToken(data.access_token);
     setUser(data.user);
     return data;
   };
 
-  /**
-   * Logout
-   */
   const logout = () => {
-    localStorage.removeItem('medai_token');
+    clearAuthStorage();
     setToken(null);
     setUser(null);
   };

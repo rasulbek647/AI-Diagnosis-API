@@ -1,11 +1,12 @@
-// LanguageSwitcher.jsx — Language switcher dropdown
+// LanguageSwitcher.jsx
 import { useState, useRef, useEffect } from 'react';
+import { Globe } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 
 const LANGS = [
   { code: 'uz', label: "O'zbekcha", flag: '🇺🇿' },
-  { code: 'ru', label: 'Русский',   flag: '🇷🇺' },
-  { code: 'en', label: 'English',   flag: '🇬🇧' },
+  { code: 'ru', label: 'Русский', flag: '🇷🇺' },
+  { code: 'en', label: 'English', flag: '🇬🇧' },
 ];
 
 export default function LanguageSwitcher() {
@@ -13,39 +14,43 @@ export default function LanguageSwitcher() {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
 
-  // Close on outside click
   useEffect(() => {
-    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    const handler = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
+    };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
   }, []);
+
+  const current = LANGS.find((l) => l.code === lang) || LANGS[0];
 
   return (
     <div className="relative" ref={ref}>
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-surface-card border border-slate-600/80
-                   hover:border-primary-500/45 transition-all duration-150 text-slate-300 hover:text-slate-100"
+        className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-surface-border shadow-sm
+                   hover:border-primary-300 hover:shadow-md transition-all text-slate-700"
       >
-        <span className="text-sm font-medium lowercase">{lang}</span>
-        <span className="text-sm font-semibold tracking-wide">{lang.toUpperCase()}</span>
+        <Globe size={16} className="text-primary-600" />
+        <span className="text-sm font-medium">{current.flag} {current.code.toUpperCase()}</span>
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-44 glass-card shadow-xl shadow-black/30 z-50 animate-fade-in">
+        <div className="absolute right-0 top-full mt-2 w-48 glass-card shadow-lg z-50 animate-fade-in py-1">
           {LANGS.map((l) => (
             <button
               key={l.code}
-              onClick={() => { changeLanguage(l.code); setOpen(false); }}
-              className={`w-full flex items-center gap-3 px-4 py-3 text-sm transition-colors
-                ${lang === l.code
-                  ? 'text-primary-300 bg-primary-600/10'
-                  : 'text-slate-400 hover:text-slate-100 hover:bg-white/5'}`}
+              onClick={() => {
+                changeLanguage(l.code);
+                setOpen(false);
+              }}
+              className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors
+                ${lang === l.code ? 'text-primary-700 bg-primary-50' : 'text-slate-600 hover:bg-slate-50'}`}
             >
               <span>{l.flag}</span>
               <span className="font-medium">{l.label}</span>
-              {lang === l.code && <span className="ml-auto text-primary-400">✓</span>}
+              {lang === l.code && <span className="ml-auto text-primary-600">✓</span>}
             </button>
           ))}
         </div>

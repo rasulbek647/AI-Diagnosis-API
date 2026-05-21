@@ -20,8 +20,8 @@ function DetailModal({ item, onClose, t }) {
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
       <div className="relative w-full max-w-lg glass-card shadow-2xl animate-slide-up max-h-[85vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-surface-border sticky top-0 bg-surface-card z-10">
-          <h3 className="font-display font-semibold text-slate-100">Tashxis tafsilotlari</h3>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-surface-border sticky top-0 bg-white z-10">
+          <h3 className="font-display font-semibold text-slate-900">Tashxis tafsilotlari</h3>
           <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-lg text-slate-500 hover:text-slate-200 transition-colors">
             <X size={18} />
           </button>
@@ -63,7 +63,7 @@ function DetailModal({ item, onClose, t }) {
                             color: sev === 'high' ? '#f87171' : sev === 'medium' ? '#fbbf24' : '#34d399'
                           }}>{pct}%</span>
                         </div>
-                        <div className="w-full bg-slate-800 rounded-full h-1.5">
+                        <div className="w-full bg-slate-100 rounded-full h-1.5">
                           <div
                             className={`h-1.5 rounded-full ${sev === 'high' ? 'bg-red-500' : sev === 'medium' ? 'bg-amber-500' : 'bg-emerald-500'}`}
                             style={{ width: `${pct}%` }}
@@ -111,7 +111,7 @@ function AdminUserHistoryPage() {
           <History size={20} className="text-emerald-400" />
         </div>
         <div>
-          <h2 className="font-display text-xl font-bold text-slate-100">{t.adminUserHistoryTitle}</h2>
+          <h2 className="font-display text-xl font-bold text-slate-900">{t.adminUserHistoryTitle}</h2>
           <p className="text-slate-500 text-sm">{t.adminUserHistorySubtitle}</p>
         </div>
       </div>
@@ -224,7 +224,7 @@ export default function HistoryPage() {
           <History size={20} className="text-emerald-400" />
         </div>
         <div>
-          <h2 className="font-display text-xl font-bold text-slate-100">{t.historyTitle}</h2>
+          <h2 className="font-display text-xl font-bold text-slate-900">{t.historyTitle}</h2>
           <p className="text-slate-500 text-sm">{t.historySubtitle}</p>
         </div>
       </div>

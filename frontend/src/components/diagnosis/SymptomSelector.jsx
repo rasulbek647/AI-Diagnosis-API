@@ -129,7 +129,7 @@ export default function SymptomSelector({ selected, onChange }) {
           onChange={e => setSearchQuery(e.target.value)}
           onKeyDown={handleTextAdd}
           placeholder={t.symptomsPlaceholder}
-          className="w-full px-4 py-3 rounded-xl border bg-slate-900/60 text-slate-100 placeholder:text-slate-500 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500/40 border-slate-700 focus:border-primary-500 pr-12"
+          className="input-field pr-12"
         />
         {searchQuery && (
           <button

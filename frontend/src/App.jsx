@@ -20,7 +20,7 @@ import ProfilePage   from './pages/ProfilePage';
 function ProtectedRoute({ children, adminOnly = false }) {
   const { user, loading, isAdmin } = useAuth();
   if (loading) return (
-    <div className="min-h-screen flex items-center justify-center">
+    <div className="min-h-screen flex items-center justify-center bg-surface">
       <div className="animate-spin w-10 h-10 border-2 border-primary-500 border-t-transparent rounded-full" />
     </div>
   );
@@ -93,14 +93,15 @@ export default function App() {
             position="top-right"
             toastOptions={{
               style: {
-                background: '#1e293b',
-                color: '#e2e8f0',
-                border: '1px solid #334155',
-                borderRadius: '12px',
+                background: '#ffffff',
+                color: '#334155',
+                border: '1px solid #e2e8f0',
+                borderRadius: '14px',
                 fontSize: '14px',
+                boxShadow: '0 4px 24px -4px rgba(15, 23, 42, 0.12)',
               },
-              success: { iconTheme: { primary: '#10b981', secondary: '#1e293b' } },
-              error:   { iconTheme: { primary: '#ef4444', secondary: '#1e293b' } },
+              success: { iconTheme: { primary: '#0d9488', secondary: '#ffffff' } },
+              error: { iconTheme: { primary: '#ef4444', secondary: '#ffffff' } },
             }}
           />
         </AuthProvider>

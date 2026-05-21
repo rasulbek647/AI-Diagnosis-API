@@ -171,7 +171,7 @@ export default function DashboardPage() {
               <div className="w-12 h-12 rounded-xl bg-primary-600/25 border border-primary-500/35 flex items-center justify-center mb-4">
                 <HeartPulse size={22} className="text-primary-400" />
               </div>
-              <h3 className="font-display font-semibold text-slate-100 text-lg mb-2">{t.quickDiagnosis}</h3>
+              <h3 className="font-display font-semibold text-slate-900 text-lg mb-2">{t.quickDiagnosis}</h3>
               <p className="text-slate-500 text-sm leading-relaxed">
                 Alomatlaringizni kiriting va AI bir necha soniyada tahlil qiladi
               </p>
@@ -192,7 +192,7 @@ export default function DashboardPage() {
       {!isAdmin && recent.length > 0 && (
         <div className="glass-card overflow-hidden">
           <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-surface-border">
-            <h3 className="font-display font-semibold text-slate-100">{t.recentActivity}</h3>
+            <h3 className="font-display font-semibold text-slate-900">{t.recentActivity}</h3>
             <Button variant="ghost" size="sm" onClick={() => navigate('/history')}>
               {t.viewAll} <ArrowRight size={13} />
             </Button>

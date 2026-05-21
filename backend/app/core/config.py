@@ -7,7 +7,8 @@ class Settings(BaseModel):
     app_name: str = "AI Diagnosis API"
     jwt_secret: str = "please-change-this-secret"
     jwt_algorithm: str = "HS256"
-    access_token_expire_hours: int = 24
+    access_token_expire_hours: int = 720  # 30 days — avoids daily logout
+    refresh_token_expire_days: int = 90
     database_url: str = "sqlite:///./medai.db"
     cors_origins: list[str] = ["*"]
     admin_email: str = "admin123@gmail.com"
@@ -31,7 +32,8 @@ def _load_settings() -> Settings:
     return Settings(
         app_name=os.getenv("APP_NAME", "AI Diagnosis API"),
         jwt_secret=os.getenv("JWT_SECRET", "please-change-this-secret"),
-        access_token_expire_hours=int(os.getenv("ACCESS_TOKEN_EXPIRE_HOURS", "24")),
+        access_token_expire_hours=int(os.getenv("ACCESS_TOKEN_EXPIRE_HOURS", "720")),
+        refresh_token_expire_days=int(os.getenv("REFRESH_TOKEN_EXPIRE_DAYS", "90")),
         database_url=database_url,
         cors_origins=cors or ["*"],
         admin_email=os.getenv("ADMIN_EMAIL", "admin123@gmail.com").strip().lower(),

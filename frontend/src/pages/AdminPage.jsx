@@ -230,7 +230,7 @@ export default function AdminPage() {
     <div className="space-y-6">
       <div className="flex items-center gap-3">
         <ShieldCheck className="text-purple-400" />
-        <h2 className="text-xl font-bold text-slate-100">{t.adminTitle}</h2>
+        <h2 className="text-xl font-bold text-slate-900">{t.adminTitle}</h2>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

@@ -27,7 +27,12 @@ class AuthRegisterIn(BaseModel):
 
 class AuthResponse(BaseModel):
     access_token: str
+    refresh_token: str
     user: UserOut
+
+
+class RefreshTokenIn(BaseModel):
+    refresh_token: str
 
 
 class UserRoleUpdateIn(BaseModel):

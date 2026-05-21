@@ -83,15 +83,15 @@ export default function DiagnosisPage() {
   return (
     <div className="space-y-8 max-w-4xl mx-auto">
       {/* Page header */}
-      <div className="relative overflow-hidden rounded-2xl border border-slate-700/80 bg-gradient-to-br from-slate-900/90 via-slate-900/70 to-primary-950/30 p-6 shadow-xl shadow-primary-950/20">
-        <div className="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-primary-600/10 blur-3xl pointer-events-none" />
+      <div className="relative overflow-hidden rounded-2xl border border-primary-100 bg-gradient-to-br from-primary-50 via-white to-indigo-50/40 p-6 shadow-soft">
+        <div className="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-primary-400/15 blur-3xl pointer-events-none" />
         <div className="relative flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-primary-500/15 border border-primary-400/25 flex items-center justify-center shadow-inner shadow-primary-900/40">
-            <Stethoscope size={24} className="text-primary-300" />
+          <div className="w-12 h-12 rounded-2xl bg-primary-500 flex items-center justify-center shadow-md shadow-primary-500/30">
+            <Stethoscope size={24} className="text-white" />
           </div>
           <div>
-            <h2 className="font-display text-2xl font-bold text-slate-50 tracking-tight">{t.diagnosisTitle}</h2>
-            <p className="text-slate-400 text-sm mt-0.5">{t.diagnosisSubtitle}</p>
+            <h2 className="font-display text-2xl font-bold text-slate-900 tracking-tight">{t.diagnosisTitle}</h2>
+            <p className="text-slate-500 text-sm mt-0.5">{t.diagnosisSubtitle}</p>
           </div>
         </div>
       </div>
@@ -128,11 +128,11 @@ export default function DiagnosisPage() {
 
       {/* Loading animation */}
       {flowState === STATE.LOADING && (
-        <div className="glass-card p-10 text-center animate-fade-in border-primary-500/20 bg-slate-900/40">
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-primary-500/10 border border-primary-400/20 mb-5 shadow-lg shadow-primary-900/30">
-            <Stethoscope size={36} className="text-primary-300 animate-pulse" />
+        <div className="glass-card p-10 text-center animate-fade-in border-primary-100">
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-primary-50 border border-primary-200 mb-5">
+            <Stethoscope size={36} className="text-primary-600 animate-pulse" />
           </div>
-          <p className="text-slate-200 font-semibold text-lg">{t.analyzing}</p>
+          <p className="text-slate-800 font-semibold text-lg">{t.analyzing}</p>
           <p className="text-slate-500 text-sm mt-2">AI {symptoms.length} ta alomatni tahlil qilmoqda...</p>
           <div className="flex justify-center gap-2 mt-6">
             {[0, 1, 2].map(i => (
@@ -149,15 +149,15 @@ export default function DiagnosisPage() {
       {/* Results phase */}
       {flowState === STATE.RESULT && results && (
         <>
-          <div className="glass-card px-6 py-5 border-slate-600/50">
-            <p className="text-xs text-primary-400/90 uppercase tracking-wider mb-3 font-semibold">
+          <div className="glass-card px-6 py-5">
+            <p className="text-xs text-primary-700 uppercase tracking-wider mb-3 font-semibold">
               {t.selectedSymptoms}
             </p>
             <div className="flex flex-wrap gap-2">
               {symptoms.map(s => (
                 <span
                   key={s}
-                  className="px-3 py-1.5 rounded-xl bg-slate-800/80 text-slate-200 text-sm border border-slate-600/60"
+                  className="px-3 py-1.5 rounded-xl bg-primary-50 text-primary-800 text-sm border border-primary-200"
                 >
                   {s}
                 </span>
