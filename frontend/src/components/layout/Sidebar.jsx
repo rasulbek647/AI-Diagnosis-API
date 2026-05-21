@@ -1,4 +1,3 @@
-// Sidebar.jsx — Dashboard navigation sidebar
 import { NavLink, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, Stethoscope, History, ShieldCheck, LogOut, Sparkles } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
@@ -25,20 +24,15 @@ export default function Sidebar({ mobile = false, onClose }) {
     : [{ to: '/diagnosis', icon: Stethoscope, label: t.diagnosis }];
 
   return (
-    <aside
-      className={clsx(
-        'flex flex-col h-full bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 text-white shadow-sidebar',
-        !mobile && 'w-[272px]'
-      )}
-    >
+    <aside className={clsx('sidebar-shell', !mobile && 'w-[272px]')}>
       <div className="px-6 py-6 border-b border-white/10">
         <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center shadow-glow">
+          <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-brand-glow to-brand flex items-center justify-center shadow-glow">
             <Sparkles size={20} className="text-white" />
           </div>
           <div>
             <div className="font-display font-bold text-lg leading-tight">{t.appName}</div>
-            <div className="text-xs text-slate-400 mt-0.5">{t.appTagline}</div>
+            <div className="text-xs text-white/60 mt-0.5">{t.appTagline}</div>
           </div>
         </div>
       </div>
@@ -61,13 +55,13 @@ export default function Sidebar({ mobile = false, onClose }) {
         <NavLink
           to="/profile"
           onClick={onClose}
-          className="block rounded-xl bg-white/5 hover:bg-white/10 px-4 py-3 mb-3 transition-colors border border-white/10"
+          className="block rounded-xl bg-white/10 hover:bg-white/15 px-4 py-3 mb-3 transition-colors border border-white/15"
         >
           <div className="text-sm font-semibold text-white truncate">{user?.full_name}</div>
-          <div className="text-xs text-slate-400 truncate">{maskEmail(user?.email)}</div>
-          <div className="text-[10px] text-primary-300/90 mt-1">{t.profileSidebarHint}</div>
+          <div className="text-xs text-white/55 truncate">{maskEmail(user?.email)}</div>
+          <div className="text-[10px] text-brand-glow/90 mt-1">{t.profileSidebarHint}</div>
           {isAdmin && (
-            <span className="mt-2 inline-block px-2 py-0.5 rounded-lg bg-accent-500/20 text-indigo-200 text-xs font-semibold">
+            <span className="mt-2 inline-block px-2 py-0.5 rounded-lg bg-accent/30 text-indigo-100 text-xs font-semibold">
               {t.roleAdmin}
             </span>
           )}
@@ -75,7 +69,7 @@ export default function Sidebar({ mobile = false, onClose }) {
 
         <button
           onClick={handleLogout}
-          className="sidebar-link w-full text-red-300 hover:text-red-200 hover:bg-red-500/10"
+          className="sidebar-link w-full text-red-300 hover:text-red-200 hover:bg-red-500/15"
         >
           <LogOut size={18} />
           <span>{t.logout}</span>

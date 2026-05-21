@@ -36,6 +36,8 @@ const uz = {
   admin: "Admin",
   roleAdmin: "Admin",
   settings: "Sozlamalar",
+  themeLight: "Yorug' rejim",
+  themeDark: "Qorong'u rejim",
   profileTitle: "Profil",
   profileSubtitle: "Faqat o'zingizning ma'lumotlaringizni tahrirlaysiz",
   profileClickToExpand: "Tahrirlash",

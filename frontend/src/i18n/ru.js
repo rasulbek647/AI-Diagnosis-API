@@ -33,6 +33,8 @@ const ru = {
   admin: "Панель администратора",
   roleAdmin: "Админ",
   settings: "Настройки",
+  themeLight: "Светлая тема",
+  themeDark: "Тёмная тема",
   profileTitle: "Профиль",
   profileSubtitle: "Редактируются только ваши данные",
   profileClickToExpand: "Редактировать",

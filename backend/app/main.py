@@ -27,6 +27,15 @@ app.add_middleware(
 
 @app.on_event("startup")
 def startup() -> None:
+    import logging
+    import os
+
+    logger = logging.getLogger("medai")
+    if os.getenv("RENDER") and settings.database_url.startswith("sqlite"):
+        logger.warning(
+            "DATABASE_URL is SQLite on Render — user data is LOST on every deploy/restart. "
+            "Link PostgreSQL (medai-db) in Render Environment."
+        )
     init_db()
     ensure_admin_user()
 
@@ -40,7 +49,19 @@ def root():
 
 @app.get("/health")
 def health():
-    return {"ok": True}
+    db_url = settings.database_url
+    if db_url.startswith("postgresql"):
+        db_kind = "postgresql"
+        persistent = True
+    else:
+        db_kind = "sqlite"
+        persistent = False
+    return {
+        "ok": True,
+        "database": db_kind,
+        "persistent": persistent,
+        "token_refresh_enabled": True,
+    }
 
 
 app.include_router(auth.router, prefix="/api/v1/auth", tags=["auth"])

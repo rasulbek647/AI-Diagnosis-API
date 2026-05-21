@@ -2,6 +2,63 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Light: mint teal + soft violet ── */
+:root,
+html.light {
+  --canvas: 240 249 255;
+  --card: 255 255 255;
+  --card-hover: 248 250 252;
+  --border: 203 213 225;
+  --text: 15 23 42;
+  --text-muted: 71 85 105;
+  --text-faint: 148 163 184;
+  --brand: 13 148 136;
+  --brand-soft: 204 251 241;
+  --brand-glow: 45 212 191;
+  --accent: 99 102 241;
+  --accent-soft: 224 231 255;
+  --sidebar-from: 15 118 110;
+  --sidebar-to: 67 56 202;
+  --mesh-1: rgba(20, 184, 166, 0.22);
+  --mesh-2: rgba(99, 102, 241, 0.18);
+  --mesh-base: linear-gradient(155deg, #ecfeff 0%, #f8fafc 45%, #eef2ff 100%);
+  --shadow-soft: 0 4px 24px -4px rgba(13, 148, 136, 0.12);
+  --shadow-glow: 0 0 48px -10px rgba(20, 184, 166, 0.45);
+  --shadow-sidebar: 4px 0 32px -8px rgba(67, 56, 202, 0.2);
+  --shadow-card: 0 8px 32px -8px rgba(15, 23, 42, 0.08);
+  --warn-bg: 255 251 235;
+  --warn-border: 253 230 138;
+  --warn-text: 146 64 14;
+}
+
+/* ── Dark: deep ocean + teal glow + violet accent ── */
+html.dark {
+  --canvas: 10 16 32;
+  --card: 22 32 52;
+  --card-hover: 30 42 68;
+  --border: 51 65 85;
+  --text: 241 245 249;
+  --text-muted: 148 163 184;
+  --text-faint: 100 116 139;
+  --brand: 45 212 191;
+  --brand-soft: 19 78 74;
+  --brand-glow: 94 234 212;
+  --accent: 129 140 248;
+  --accent-soft: 49 46 129;
+  --sidebar-from: 8 47 73;
+  --sidebar-to: 30 27 75;
+  --mesh-1: rgba(45, 212, 191, 0.15);
+  --mesh-2: rgba(129, 140, 248, 0.12);
+  --mesh-base: linear-gradient(155deg, #0c1222 0%, #0f172a 50%, #1e1b4b 100%);
+  --shadow-soft: 0 4px 28px -4px rgba(0, 0, 0, 0.45);
+  --shadow-glow: 0 0 56px -12px rgba(45, 212, 191, 0.35);
+  --shadow-sidebar: 4px 0 40px -8px rgba(0, 0, 0, 0.5);
+  --shadow-card: 0 12px 40px -12px rgba(0, 0, 0, 0.55);
+  --warn-bg: 69 26 3;
+  --warn-border: 180 83 9;
+  --warn-text: 253 230 138;
+}
+
 html,
 body,
 #root {
@@ -9,26 +66,34 @@ body,
 }
 
 body {
-  @apply bg-surface text-slate-800 antialiased font-sans;
+  @apply bg-canvas text-app antialiased font-sans transition-colors duration-300;
   background-image:
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(20, 184, 166, 0.12), transparent),
-    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(99, 102, 241, 0.06), transparent);
+    radial-gradient(ellipse 90% 55% at 50% -15%, var(--mesh-1), transparent),
+    radial-gradient(ellipse 55% 45% at 100% 0%, var(--mesh-2), transparent),
+    var(--mesh-base);
+  background-attachment: fixed;
 }
 
 .glass-card {
-  @apply bg-white/90 backdrop-blur-xl rounded-2xl border border-surface-border shadow-soft;
+  @apply bg-card/95 backdrop-blur-xl rounded-2xl border border-line shadow-card transition-colors duration-300;
 }
 
-.glass-card-dark {
-  @apply bg-slate-900/95 backdrop-blur-xl rounded-2xl border border-slate-700/60 text-slate-100;
+.sidebar-shell {
+  @apply flex flex-col h-full text-white shadow-sidebar;
+  background: linear-gradient(
+    165deg,
+    rgb(var(--sidebar-from)) 0%,
+    rgb(var(--sidebar-to)) 55%,
+    rgb(15 23 42) 100%
+  );
 }
 
 .sidebar-link {
-  @apply flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-all duration-200;
+  @apply flex items-center gap-3 px-4 py-3 rounded-xl text-white/70 hover:text-white hover:bg-white/10 transition-all duration-200;
 }
 
 .sidebar-link.active {
-  @apply text-white bg-white/15 shadow-inner;
+  @apply text-white bg-white/15 border border-white/20 shadow-inner;
 }
 
 .page-enter {
@@ -41,42 +106,67 @@ body {
 }
 
 .data-table th {
-  @apply text-left text-xs font-semibold text-slate-500 uppercase tracking-wider px-6 py-3 bg-slate-50;
+  @apply text-left text-xs font-semibold text-app-muted uppercase tracking-wider px-6 py-3;
+  background: rgb(var(--card-hover) / 0.8);
 }
 
 .data-table td {
-  @apply px-6 py-4 text-sm border-t border-surface-border text-slate-700;
+  @apply px-6 py-4 text-sm border-t border-line text-app;
 }
 
 .input-field {
-  @apply w-full px-4 py-3 rounded-xl bg-white border border-surface-border text-slate-800 placeholder:text-slate-400
-    focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500 transition-colors shadow-sm;
+  @apply w-full px-4 py-3 rounded-xl bg-card border border-line text-app placeholder:text-app-faint
+    focus:outline-none focus:ring-2 focus:ring-brand/35 focus:border-brand transition-all duration-200 shadow-sm;
 }
 
 .symptom-pill {
-  @apply px-3 py-2 rounded-xl text-sm font-medium border border-surface-border bg-white text-slate-600
-    hover:border-primary-400 hover:text-primary-700 hover:shadow-sm transition-all;
+  @apply px-3 py-2 rounded-xl text-sm font-medium border border-line bg-card text-app-muted
+    hover:border-brand hover:text-brand hover:shadow-sm transition-all;
 }
 
 .symptom-pill.selected {
-  @apply bg-primary-50 border-primary-400 text-primary-800 shadow-sm;
+  @apply bg-brand-soft border-brand text-brand shadow-sm;
+  color: rgb(var(--brand));
 }
 
 .auth-mesh {
   background:
-    radial-gradient(circle at 20% 30%, rgba(20, 184, 166, 0.25), transparent 45%),
-    radial-gradient(circle at 80% 70%, rgba(99, 102, 241, 0.2), transparent 45%),
-    linear-gradient(160deg, #ecfdf8 0%, #f8fafc 40%, #eef2ff 100%);
+    radial-gradient(circle at 18% 28%, var(--mesh-1), transparent 48%),
+    radial-gradient(circle at 82% 72%, var(--mesh-2), transparent 48%),
+    var(--mesh-base);
+  background-attachment: fixed;
 }
 
-.btn-shine {
-  background-size: 200% auto;
-  background-image: linear-gradient(
-    90deg,
-    #0d9488 0%,
-    #14b8a6 25%,
-    #34d4b8 50%,
-    #14b8a6 75%,
-    #0d9488 100%
-  );
+.warn-banner {
+  background: rgb(var(--warn-bg));
+  border: 1px solid rgb(var(--warn-border));
+  color: rgb(var(--warn-text));
+}
+
+.navbar-bar {
+  @apply border-b border-line bg-card/75 backdrop-blur-xl;
+}
+
+.disease-card-high {
+  @apply border-red-300/60 dark:border-red-500/40;
+  background: linear-gradient(135deg, rgb(254 226 226 / 0.5), rgb(var(--card)));
+}
+html.dark .disease-card-high {
+  background: linear-gradient(135deg, rgb(127 29 29 / 0.35), rgb(var(--card)));
+}
+
+.disease-card-medium {
+  @apply border-amber-300/60 dark:border-amber-500/35;
+  background: linear-gradient(135deg, rgb(254 243 199 / 0.5), rgb(var(--card)));
+}
+html.dark .disease-card-medium {
+  background: linear-gradient(135deg, rgb(120 53 15 / 0.3), rgb(var(--card)));
+}
+
+.disease-card-low {
+  @apply border-emerald-300/60 dark:border-emerald-500/35;
+  background: linear-gradient(135deg, rgb(209 250 229 / 0.5), rgb(var(--card)));
+}
+html.dark .disease-card-low {
+  background: linear-gradient(135deg, rgb(6 78 59 / 0.35), rgb(var(--card)));
 }

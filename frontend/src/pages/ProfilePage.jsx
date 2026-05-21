@@ -101,7 +101,7 @@ export default function ProfilePage() {
       <div className="flex items-center gap-3">
         <UserCircle className="text-primary-400 shrink-0" size={28} />
         <div>
-          <h2 className="text-xl font-bold text-slate-900">{t.profileTitle}</h2>
+          <h2 className="text-xl font-bold text-app">{t.profileTitle}</h2>
           <p className="text-sm text-slate-500">{t.profileSubtitle}</p>
         </div>
       </div>

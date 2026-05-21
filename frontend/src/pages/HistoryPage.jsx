@@ -21,7 +21,7 @@ function DetailModal({ item, onClose, t }) {
       <div className="relative w-full max-w-lg glass-card shadow-2xl animate-slide-up max-h-[85vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-surface-border sticky top-0 bg-white z-10">
-          <h3 className="font-display font-semibold text-slate-900">Tashxis tafsilotlari</h3>
+          <h3 className="font-display font-semibold text-app">Tashxis tafsilotlari</h3>
           <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-lg text-slate-500 hover:text-slate-200 transition-colors">
             <X size={18} />
           </button>
@@ -111,7 +111,7 @@ function AdminUserHistoryPage() {
           <History size={20} className="text-emerald-400" />
         </div>
         <div>
-          <h2 className="font-display text-xl font-bold text-slate-900">{t.adminUserHistoryTitle}</h2>
+          <h2 className="font-display text-xl font-bold text-app">{t.adminUserHistoryTitle}</h2>
           <p className="text-slate-500 text-sm">{t.adminUserHistorySubtitle}</p>
         </div>
       </div>
@@ -224,7 +224,7 @@ export default function HistoryPage() {
           <History size={20} className="text-emerald-400" />
         </div>
         <div>
-          <h2 className="font-display text-xl font-bold text-slate-900">{t.historyTitle}</h2>
+          <h2 className="font-display text-xl font-bold text-app">{t.historyTitle}</h2>
           <p className="text-slate-500 text-sm">{t.historySubtitle}</p>
         </div>
       </div>

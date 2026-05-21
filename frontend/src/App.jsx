@@ -3,33 +3,31 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { LanguageProvider } from './context/LanguageContext';
+import { useTheme } from './context/ThemeContext';
 
-// Layout
 import Layout from './components/layout/Layout';
-
-// Pages
-import LoginPage    from './pages/LoginPage';
+import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import DiagnosisPage from './pages/DiagnosisPage';
-import HistoryPage   from './pages/HistoryPage';
-import AdminPage     from './pages/AdminPage';
-import ProfilePage   from './pages/ProfilePage';
+import HistoryPage from './pages/HistoryPage';
+import AdminPage from './pages/AdminPage';
+import ProfilePage from './pages/ProfilePage';
 
-// ── Protected route wrapper ──
 function ProtectedRoute({ children, adminOnly = false }) {
   const { user, loading, isAdmin } = useAuth();
-  if (loading) return (
-    <div className="min-h-screen flex items-center justify-center bg-surface">
-      <div className="animate-spin w-10 h-10 border-2 border-primary-500 border-t-transparent rounded-full" />
-    </div>
-  );
-  if (!user)              return <Navigate to="/login"     replace />;
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-canvas">
+        <div className="animate-spin w-10 h-10 border-2 border-brand border-t-transparent rounded-full" />
+      </div>
+    );
+  }
+  if (!user) return <Navigate to="/login" replace />;
   if (adminOnly && !isAdmin) return <Navigate to="/diagnosis" replace />;
   return children;
 }
 
-// ── Public route: redirect if already logged in ──
 function PublicRoute({ children }) {
   const { user, loading, isAdmin } = useAuth();
   if (loading) return null;
@@ -59,26 +57,60 @@ function AppRoutes() {
   const { isAdmin } = useAuth();
   return (
     <Routes>
-      {/* Public */}
-      <Route path="/login"    element={<PublicRoute><LoginPage    /></PublicRoute>} />
+      <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
       <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
 
-      {/* Authenticated */}
       <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
         <Route path="/dashboard" element={<DashboardRoute />} />
-        <Route path="/diagnosis"  element={<DiagnosisRoute />} />
-        <Route path="/history"    element={<HistoryRoute />} />
-        <Route path="/profile"    element={<ProfilePage   />} />
-        <Route path="/admin"      element={
-          <ProtectedRoute adminOnly>
-            <AdminPage />
-          </ProtectedRoute>
-        } />
+        <Route path="/diagnosis" element={<DiagnosisRoute />} />
+        <Route path="/history" element={<HistoryRoute />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute adminOnly>
+              <AdminPage />
+            </ProtectedRoute>
+          }
+        />
       </Route>
 
       <Route path="/" element={<Navigate to={isAdmin ? '/admin' : '/diagnosis'} replace />} />
       <Route path="*" element={<Navigate to={isAdmin ? '/admin' : '/diagnosis'} replace />} />
     </Routes>
+  );
+}
+
+function ThemedToaster() {
+  const { isDark } = useTheme();
+  return (
+    <Toaster
+      position="top-right"
+      toastOptions={{
+        style: {
+          background: isDark ? 'rgb(22, 32, 52)' : '#ffffff',
+          color: isDark ? '#e2e8f0' : '#334155',
+          border: isDark ? '1px solid rgb(51, 65, 85)' : '1px solid #e2e8f0',
+          borderRadius: '14px',
+          fontSize: '14px',
+          boxShadow: isDark
+            ? '0 8px 32px rgba(0,0,0,0.4)'
+            : '0 4px 24px -4px rgba(13, 148, 136, 0.15)',
+        },
+        success: {
+          iconTheme: {
+            primary: isDark ? '#2dd4bf' : '#0d9488',
+            secondary: isDark ? '#162034' : '#ffffff',
+          },
+        },
+        error: {
+          iconTheme: {
+            primary: '#ef4444',
+            secondary: isDark ? '#162034' : '#ffffff',
+          },
+        },
+      }}
+    />
   );
 }
 
@@ -88,22 +120,7 @@ export default function App() {
       <LanguageProvider>
         <AuthProvider>
           <AppRoutes />
-          {/* Toast notifications */}
-          <Toaster
-            position="top-right"
-            toastOptions={{
-              style: {
-                background: '#ffffff',
-                color: '#334155',
-                border: '1px solid #e2e8f0',
-                borderRadius: '14px',
-                fontSize: '14px',
-                boxShadow: '0 4px 24px -4px rgba(15, 23, 42, 0.12)',
-              },
-              success: { iconTheme: { primary: '#0d9488', secondary: '#ffffff' } },
-              error: { iconTheme: { primary: '#ef4444', secondary: '#ffffff' } },
-            }}
-          />
+          <ThemedToaster />
         </AuthProvider>
       </LanguageProvider>
     </BrowserRouter>

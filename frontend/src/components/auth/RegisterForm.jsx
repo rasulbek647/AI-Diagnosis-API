@@ -48,7 +48,7 @@ export default function RegisterForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       <div>
-        <label className="block text-sm font-semibold text-slate-700 mb-2">{t.fullName}</label>
+        <label className="block text-sm font-semibold text-app mb-2">{t.fullName}</label>
         <input
           type="text"
           value={form.fullName}
@@ -60,7 +60,7 @@ export default function RegisterForm() {
       </div>
 
       <div>
-        <label className="block text-sm font-semibold text-slate-700 mb-2">{t.email}</label>
+        <label className="block text-sm font-semibold text-app mb-2">{t.email}</label>
         <input
           type="email"
           value={form.email}
@@ -72,7 +72,7 @@ export default function RegisterForm() {
       </div>
 
       <div>
-        <label className="block text-sm font-semibold text-slate-700 mb-2">{t.password}</label>
+        <label className="block text-sm font-semibold text-app mb-2">{t.password}</label>
         <div className="relative">
           <input
             type={showPwd ? 'text' : 'password'}
@@ -93,7 +93,7 @@ export default function RegisterForm() {
       </div>
 
       <div>
-        <label className="block text-sm font-semibold text-slate-700 mb-2">{t.confirmPassword}</label>
+        <label className="block text-sm font-semibold text-app mb-2">{t.confirmPassword}</label>
         <input
           type="password"
           value={form.confirm}
@@ -108,9 +108,9 @@ export default function RegisterForm() {
         {t.register}
       </Button>
 
-      <p className="text-center text-sm text-slate-500">
+      <p className="text-center text-sm text-app-muted">
         {t.haveAccount}{' '}
-        <Link to="/login" className="text-primary-600 hover:text-primary-700 font-semibold">
+        <Link to="/login" className="text-brand hover:text-brand-glow font-semibold">
           {t.loginHere}
         </Link>
       </p>

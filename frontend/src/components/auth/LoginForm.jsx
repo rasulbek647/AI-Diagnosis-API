@@ -1,4 +1,3 @@
-// LoginForm.jsx — Login form
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
@@ -44,7 +43,7 @@ export default function LoginForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       <div>
-        <label className="block text-sm font-semibold text-slate-700 mb-2">{t.email}</label>
+        <label className="block text-sm font-semibold text-app mb-2">{t.email}</label>
         <input
           type="email"
           value={form.email}
@@ -56,7 +55,7 @@ export default function LoginForm() {
       </div>
 
       <div>
-        <label className="block text-sm font-semibold text-slate-700 mb-2">{t.password}</label>
+        <label className="block text-sm font-semibold text-app mb-2">{t.password}</label>
         <div className="relative">
           <input
             type={showPwd ? 'text' : 'password'}
@@ -68,7 +67,7 @@ export default function LoginForm() {
           <button
             type="button"
             onClick={() => setShowPwd(!showPwd)}
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-app-faint hover:text-app-muted"
           >
             {showPwd ? <EyeOff size={16} /> : <Eye size={16} />}
           </button>
@@ -80,9 +79,9 @@ export default function LoginForm() {
         {t.login}
       </Button>
 
-      <p className="text-center text-sm text-slate-500 pt-1">
+      <p className="text-center text-sm text-app-muted pt-1">
         {t.noAccount}{' '}
-        <Link to="/register" className="text-primary-600 hover:text-primary-700 font-semibold">
+        <Link to="/register" className="text-brand hover:text-brand-glow font-semibold">
           {t.registerHere}
         </Link>
       </p>

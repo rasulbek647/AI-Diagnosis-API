@@ -8,7 +8,7 @@ class Settings(BaseModel):
     jwt_secret: str = "please-change-this-secret"
     jwt_algorithm: str = "HS256"
     access_token_expire_hours: int = 720  # 30 days — avoids daily logout
-    refresh_token_expire_days: int = 90
+    refresh_token_expire_days: int = 365
     database_url: str = "sqlite:///./medai.db"
     cors_origins: list[str] = ["*"]
     admin_email: str = "admin123@gmail.com"

@@ -13,6 +13,7 @@ import {
 } from 'recharts';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
+import { useTheme } from '../context/ThemeContext';
 import { StatCard } from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import WarningBanner from '../components/diagnosis/WarningBanner';
@@ -25,7 +26,15 @@ const isDemo = import.meta.env.VITE_DEMO === 'true';
 export default function DashboardPage() {
   const { isAdmin } = useAuth();
   const { t } = useLanguage();
+  const { isDark } = useTheme();
   const navigate = useNavigate();
+
+  const chartStroke = isDark ? '#2dd4bf' : '#0d9488';
+  const chartGrid = isDark ? '#334155' : '#e2e8f0';
+  const chartTick = isDark ? '#94a3b8' : '#64748b';
+  const tooltipBg = isDark ? '#162034' : '#ffffff';
+  const tooltipBorder = isDark ? '#334155' : '#e2e8f0';
+  const tooltipText = isDark ? '#e2e8f0' : '#334155';
 
   const [stats, setStats] = useState(null);
   const [recent, setRecent] = useState([]);
@@ -122,44 +131,28 @@ export default function DashboardPage() {
 
       <div className={isAdmin ? '' : 'grid grid-cols-1 lg:grid-cols-3 gap-6'}>
         <div className={isAdmin ? 'glass-card p-6' : 'lg:col-span-2 glass-card p-6'}>
-          <h3 className="font-display font-semibold text-slate-300 text-sm mb-6">Haftalik faoliyat</h3>
+          <h3 className="font-display font-semibold text-app-muted text-sm mb-6">Haftalik faoliyat</h3>
           <ResponsiveContainer width="100%" height={200}>
             <AreaChart data={chartData} margin={{ top: 8, right: 8, left: -28, bottom: 0 }}>
               <defs>
                 <linearGradient id="diagGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#2d96f8" stopOpacity={0.35} />
-                  <stop offset="95%" stopColor="#2d96f8" stopOpacity={0} />
+                  <stop offset="5%" stopColor={chartStroke} stopOpacity={0.35} />
+                  <stop offset="95%" stopColor={chartStroke} stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
-              <XAxis
-                dataKey="day"
-                tick={{ fill: '#94a3b8', fontSize: 12 }}
-                axisLine={false}
-                tickLine={false}
-              />
-              <YAxis
-                tick={{ fill: '#94a3b8', fontSize: 12 }}
-                axisLine={false}
-                tickLine={false}
-                allowDecimals={false}
-              />
+              <CartesianGrid strokeDasharray="3 3" stroke={chartGrid} vertical={false} />
+              <XAxis dataKey="day" tick={{ fill: chartTick, fontSize: 12 }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: chartTick, fontSize: 12 }} axisLine={false} tickLine={false} allowDecimals={false} />
               <Tooltip
                 contentStyle={{
-                  background: '#1e293b',
-                  border: '1px solid #334155',
+                  background: tooltipBg,
+                  border: `1px solid ${tooltipBorder}`,
                   borderRadius: '12px',
-                  color: '#e2e8f0',
+                  color: tooltipText,
                 }}
-                cursor={{ stroke: '#2d96f8', strokeWidth: 1 }}
+                cursor={{ stroke: chartStroke, strokeWidth: 1 }}
               />
-              <Area
-                type="monotone"
-                dataKey="diagnoses"
-                stroke="#2d96f8"
-                strokeWidth={2.5}
-                fill="url(#diagGrad)"
-              />
+              <Area type="monotone" dataKey="diagnoses" stroke={chartStroke} strokeWidth={2.5} fill="url(#diagGrad)" />
             </AreaChart>
           </ResponsiveContainer>
         </div>
@@ -171,8 +164,8 @@ export default function DashboardPage() {
               <div className="w-12 h-12 rounded-xl bg-primary-600/25 border border-primary-500/35 flex items-center justify-center mb-4">
                 <HeartPulse size={22} className="text-primary-400" />
               </div>
-              <h3 className="font-display font-semibold text-slate-900 text-lg mb-2">{t.quickDiagnosis}</h3>
-              <p className="text-slate-500 text-sm leading-relaxed">
+              <h3 className="font-display font-semibold text-app text-lg mb-2">{t.quickDiagnosis}</h3>
+              <p className="text-app-muted text-sm leading-relaxed">
                 Alomatlaringizni kiriting va AI bir necha soniyada tahlil qiladi
               </p>
             </div>
@@ -192,7 +185,7 @@ export default function DashboardPage() {
       {!isAdmin && recent.length > 0 && (
         <div className="glass-card overflow-hidden">
           <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-surface-border">
-            <h3 className="font-display font-semibold text-slate-900">{t.recentActivity}</h3>
+            <h3 className="font-display font-semibold text-app">{t.recentActivity}</h3>
             <Button variant="ghost" size="sm" onClick={() => navigate('/history')}>
               {t.viewAll} <ArrowRight size={13} />
             </Button>
@@ -208,11 +201,11 @@ export default function DashboardPage() {
             <tbody>
               {recent.map((item) => (
                 <tr key={item.id}>
-                  <td className="text-slate-500 font-mono text-xs">{formatDate(item.created_at)}</td>
+                  <td className="text-app-faint font-mono text-xs">{formatDate(item.created_at)}</td>
                   <td>
-                    <span className="font-semibold text-primary-300">{item.top_diagnosis}</span>
+                    <span className="font-semibold text-brand">{item.top_diagnosis}</span>
                   </td>
-                  <td className="text-slate-500">{item.symptoms?.slice(0, 3).join(', ')}</td>
+                  <td className="text-app-muted">{item.symptoms?.slice(0, 3).join(', ')}</td>
                 </tr>
               ))}
             </tbody>

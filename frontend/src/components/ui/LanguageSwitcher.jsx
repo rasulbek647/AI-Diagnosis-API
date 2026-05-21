@@ -1,4 +1,3 @@
-// LanguageSwitcher.jsx
 import { useState, useRef, useEffect } from 'react';
 import { Globe } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
@@ -29,10 +28,10 @@ export default function LanguageSwitcher() {
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-surface-border shadow-sm
-                   hover:border-primary-300 hover:shadow-md transition-all text-slate-700"
+        className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-card/80 border border-line shadow-sm
+                   hover:border-brand/40 hover:shadow-md transition-all text-app"
       >
-        <Globe size={16} className="text-primary-600" />
+        <Globe size={16} className="text-brand" />
         <span className="text-sm font-medium">{current.flag} {current.code.toUpperCase()}</span>
       </button>
 
@@ -46,11 +45,11 @@ export default function LanguageSwitcher() {
                 setOpen(false);
               }}
               className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors
-                ${lang === l.code ? 'text-primary-700 bg-primary-50' : 'text-slate-600 hover:bg-slate-50'}`}
+                ${lang === l.code ? 'text-brand bg-brand-soft' : 'text-app-muted hover:bg-card-hover'}`}
             >
               <span>{l.flag}</span>
               <span className="font-medium">{l.label}</span>
-              {lang === l.code && <span className="ml-auto text-primary-600">✓</span>}
+              {lang === l.code && <span className="ml-auto text-brand">✓</span>}
             </button>
           ))}
         </div>

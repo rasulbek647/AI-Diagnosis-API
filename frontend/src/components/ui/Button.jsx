@@ -1,4 +1,3 @@
-// Button.jsx — Reusable button with variants
 import clsx from 'clsx';
 
 export default function Button({
@@ -13,16 +12,16 @@ export default function Button({
   className = '',
 }) {
   const base =
-    'inline-flex items-center justify-center gap-2 font-semibold rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white disabled:opacity-50 disabled:cursor-not-allowed';
+    'inline-flex items-center justify-center gap-2 font-semibold rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-canvas disabled:opacity-50 disabled:cursor-not-allowed';
 
   const variants = {
     primary:
-      'bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white shadow-md shadow-primary-600/25 focus:ring-primary-500',
+      'bg-gradient-to-r from-brand to-primary-500 hover:from-primary-500 hover:to-brand-glow text-white shadow-md shadow-brand/25 focus:ring-brand',
     secondary:
-      'bg-white hover:bg-slate-50 border border-surface-border text-slate-700 hover:text-slate-900 focus:ring-slate-300 shadow-sm',
+      'bg-card hover:bg-card-hover border border-line text-app hover:text-app focus:ring-line shadow-sm',
     danger:
-      'bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 hover:text-red-700 focus:ring-red-400',
-    ghost: 'hover:bg-slate-100 text-slate-600 hover:text-slate-900 focus:ring-slate-300',
+      'bg-red-50 dark:bg-red-950/40 hover:bg-red-100 dark:hover:bg-red-900/40 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-300 focus:ring-red-400',
+    ghost: 'hover:bg-card-hover text-app-muted hover:text-app focus:ring-line',
   };
 
   const sizes = {

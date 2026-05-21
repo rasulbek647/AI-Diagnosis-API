@@ -33,6 +33,8 @@ const en = {
   admin: "Admin Panel",
   roleAdmin: "Admin",
   settings: "Settings",
+  themeLight: "Light mode",
+  themeDark: "Dark mode",
   profileTitle: "Profile",
   profileSubtitle: "Edit only your own information",
   profileClickToExpand: "Edit",
