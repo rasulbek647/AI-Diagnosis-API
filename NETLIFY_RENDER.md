@@ -15,8 +15,8 @@
 1. [Render dashboard](https://dashboard.render.com/web/srv-d826bbbtqb8s73caa5q0) → **Environment**.
 2. Quyidagilarni tekshiring:
    - `JWT_SECRET` — uzun maxfiy kalit (o‘zgartirsangiz barcha foydalanuvchilar qayta kirishi kerak)
-   - `ACCESS_TOKEN_EXPIRE_HOURS` = `720` (30 kun — kunlik chiqib ketmaslik uchun)
-   - `REFRESH_TOKEN_EXPIRE_DAYS` = `365`
+   - `ACCESS_TOKEN_EXPIRE_HOURS` = `2160` (90 kun)
+   - `REFRESH_TOKEN_EXPIRE_DAYS` = `730` (2 yil — admin o‘chirmaguncha sessiya)
    - **`DATABASE_URL`** — Render PostgreSQL `medai-db` ga ulangan bo‘lishi shart (SQLite bo‘lsa foydalanuvchilar deploydan keyin yo‘qoladi)
    - `ADMIN_EMAIL`, `ADMIN_PASSWORD` — admin hisobi
    - **`CORS_ORIGINS`** =  

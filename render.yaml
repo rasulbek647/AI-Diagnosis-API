@@ -18,9 +18,9 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: ACCESS_TOKEN_EXPIRE_HOURS
-        value: "720"
+        value: "2160"
       - key: REFRESH_TOKEN_EXPIRE_DAYS
-        value: "365"
+        value: "730"
       - key: ADMIN_EMAIL
         sync: false
       - key: ADMIN_PASSWORD
